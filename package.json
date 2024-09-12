@@ -21,7 +21,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "fastify": "^4.28.1"
+    "fastify": "^4.28.1",
+    "http-status-codes": "^2.3.0"
   },
   "devDependencies": {
     "@ribeirogab/eslint-config": "^2.0.1",
