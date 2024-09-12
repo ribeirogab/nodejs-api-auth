@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint . --ext .ts",
-    "prepare": "husky"
+    "prepare": "husky",
+    "build": "tsup"
   },
   "keywords": [],
   "author": "",
