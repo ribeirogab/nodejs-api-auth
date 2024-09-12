@@ -1,9 +1,17 @@
 {
   "name": "nodejs-api-authentication",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "lint": "eslint . --ext .ts",
+    "vitest": "vitest --globals --config vitest.config.ts",
+    "test": "npm run vitest -- run",
+    "test:unit": "npm run vitest -- --project unit --run",
+    "test:integration": "npm run vitest -- --project integration --run",
+    "test:watch": "npm run vitest",
+    "test:coverage": "npm run vitest -- run --coverage",
+    "test:ci": "npm run vitest -- run --silent --coverage --reporter=junit --outputFile.junit=./test-output/junit.xml",
     "prepare": "husky",
     "build": "tsup"
   },
@@ -14,9 +22,12 @@
   "devDependencies": {
     "@ribeirogab/eslint-config": "^2.0.1",
     "@types/node": "^22.5.4",
+    "@vitest/coverage-v8": "^2.0.5",
     "husky": "^9.1.6",
     "tsup": "^8.2.4",
     "tsx": "^4.19.0",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "vite-tsconfig-paths": "^5.0.1",
+    "vitest": "^2.0.5"
   }
 }
