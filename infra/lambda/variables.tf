@@ -15,3 +15,9 @@ variable "project_name" {
   type        = string
   default     = "nodejs-api-authentication"
 }
+
+variable "dynamodb_table_name" {
+  description = "The name of the DynamoDB table"
+  type        = string
+  default     = "authentication"
+}

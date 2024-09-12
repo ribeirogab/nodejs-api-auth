@@ -2,9 +2,8 @@ provider "aws" {
   region = var.aws_region
 }
 
-# DynamoDB Table: auth-resource
 resource "aws_dynamodb_table" "auth_resource_table" {
-  name         = "auth-resource"
+  name         = "${var.environment}-${var.dynamodb_table_name}"
   billing_mode = "PAY_PER_REQUEST"
 
   hash_key  = "SK"
