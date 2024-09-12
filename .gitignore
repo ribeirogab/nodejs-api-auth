@@ -2,3 +2,10 @@ node_modules
 DS_Store
 .husky/_
 dist
+.infracost
+.terraform
+terraform.tfstate.backup
+.terraform.lock.hcl
+terraform.tfstate
+nodejs-layer.zip
+dist.zip

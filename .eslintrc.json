@@ -9,6 +9,12 @@
       "rules": {
         "import/no-default-export": "off"
       }
+    },
+    {
+      "files": ["postinstall*"],
+      "rules": {
+        "import/extensions": "off"
+      }
     }
   ]
 }

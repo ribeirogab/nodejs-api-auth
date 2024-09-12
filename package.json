@@ -4,6 +4,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
+    "postinstall": "node postinstall.js",
     "lint": "eslint . --ext .ts",
     "vitest": "vitest --globals --config vitest.config.ts",
     "test": "npm run vitest -- run",
@@ -19,6 +20,9 @@
   "author": "https://github.com/ribeirogab",
   "license": "ISC",
   "description": "",
+  "dependencies": {
+    "fastify": "^4.28.1"
+  },
   "devDependencies": {
     "@ribeirogab/eslint-config": "^2.0.1",
     "@types/node": "^22.5.4",
