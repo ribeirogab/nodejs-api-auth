@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+const fs = require('fs');
+const path = require('path');
 
 const NODEJS_DEPENDENCIES_DIR = path.resolve(
   process.cwd(),

@@ -1,6 +1,11 @@
 {
   "dependencies": {
+    "@fastify/aws-lambda": "^4.1.0",
+    "@fastify/cors": "^9.0.1",
+    "env-var": "^7.5.0",
     "fastify": "^4.28.1",
-    "http-status-codes": "^2.3.0"
+    "http-status-codes": "^2.3.0",
+    "reflect-metadata": "^0.2.2",
+    "tsyringe": "^4.8.0"
   }
 }
