@@ -26,7 +26,7 @@ resource "aws_dynamodb_table" "auth_resource_table" {
 
 resource "aws_lambda_function" "nodejs_api_authentication_lambda" {
   function_name = "${var.environment}-${var.project_name}"
-  handler       = "index.handler"
+  handler       = "lambda.handler"
   runtime       = "nodejs20.x"
   role          = aws_iam_role.lambda_exec_role.arn
 
