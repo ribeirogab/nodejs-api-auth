@@ -13,11 +13,11 @@ export class RegisterTokenRepository
 {
   private tokens: RegisterToken[] = [];
 
-  async create(dto: RegisterToken): Promise<void> {
-    this.tokens.push({ ...dto, id: String(this.tokens.length + 1) });
+  public async create(dto: RegisterToken): Promise<void> {
+    this.tokens.push(dto);
   }
 
-  async findById(dto: { id: string }): Promise<RegisterToken | null> {
+  public async findById(dto: { id: string }): Promise<RegisterToken | null> {
     const token = this.tokens.find(
       (registerToken) => registerToken.id === dto.id,
     );
@@ -25,11 +25,11 @@ export class RegisterTokenRepository
     return token || null;
   }
 
-  async deleteById(dto: { id: string }): Promise<void> {
+  public async deleteById(dto: { id: string }): Promise<void> {
     this.tokens = this.tokens.filter((token) => token.id !== dto.id);
   }
 
-  async findByExternalId(dto: {
+  public async findByExternalId(dto: {
     external_id: string;
   }): Promise<RegisterToken | null> {
     const token = this.tokens.find(
@@ -37,5 +37,10 @@ export class RegisterTokenRepository
     );
 
     return token || null;
+  }
+
+  // Temporary method to get all tokens
+  public find(): RegisterToken[] {
+    return this.tokens;
   }
 }

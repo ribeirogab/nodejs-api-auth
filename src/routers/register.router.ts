@@ -16,6 +16,9 @@ export class RegisterRouter implements Router {
     _?: unknown,
     done?: (err?: Error) => void,
   ) {
+    // Temporarily route to get all tokens
+    app.get('/', this.registerController.find.bind(this.registerController));
+
     app.post('/', this.registerController.create.bind(this.registerController));
 
     app.get(

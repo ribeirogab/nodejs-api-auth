@@ -32,4 +32,9 @@ export class UserRepository implements UserRepositoryInterface {
   public async findByEmail(dto: { email: string }): Promise<User | null> {
     return this.users.find((user) => user.email === dto.email) || null;
   }
+
+  // Temporary method to get all users
+  public find(): User[] {
+    return this.users;
+  }
 }

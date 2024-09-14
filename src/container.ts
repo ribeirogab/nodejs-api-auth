@@ -3,21 +3,21 @@ import { container } from 'tsyringe';
 import { EmailAdapter, HashAdapter, UniqueIdAdapter } from './adapters';
 import { EnvConfig } from './configs';
 import { RegisterController, UserController } from './controllers';
-import { ErrorHandler } from './errors/error-handler';
+import { ErrorHandlingMiddleware } from './middlewares';
 import { EmailTemplateRepository, RegisterTokenRepository, UserRepository } from './repositories';
 import { AppRouter, RegisterRouter, UserRouter } from './routers';
 import { CreateRegisterTokenService, CreateUserService, GetRegisterTokenService } from './services';
-
-// Error handling
-container.registerSingleton<ErrorHandler>('ErrorHandler', ErrorHandler);
-
-// Configs
-container.registerSingleton<EnvConfig>('EnvConfig', EnvConfig);
 
 // Adapters
 container.registerSingleton<UniqueIdAdapter>('UniqueIdAdapter', UniqueIdAdapter);
 container.registerSingleton<EmailAdapter>('EmailAdapter', EmailAdapter);
 container.registerSingleton<HashAdapter>('HashAdapter', HashAdapter);
+
+// Configs
+container.registerSingleton<EnvConfig>('EnvConfig', EnvConfig);
+
+// Middlewares
+container.registerSingleton<ErrorHandlingMiddleware>('ErrorHandlingMiddleware', ErrorHandlingMiddleware);
 
 // Repositories
 container.registerSingleton<RegisterTokenRepository>('RegisterTokenRepository', RegisterTokenRepository);

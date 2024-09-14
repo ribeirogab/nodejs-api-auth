@@ -55,5 +55,7 @@ export class CreateUserService implements CreateUserServiceInterface {
       password: hashedPassword,
       password_salt: salt,
     });
+
+    await this.registerTokenRepository.deleteById({ id: token });
   }
 }

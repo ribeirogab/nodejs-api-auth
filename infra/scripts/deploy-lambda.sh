@@ -29,6 +29,9 @@ cd dist && zip -r ../dist.zip ./* && cd ..
 npm i --prefix ${INFRA_DIR}/lambda/layers/nodejs
 cd ${INFRA_DIR}/lambda/layers && zip -r ${APP_DIR}/nodejs-layer.zip nodejs && cd ..
 
+# Remove Terraform local state files
+rm -rf ${INFRA_DIR}/lambda/.terraform
+
 # Terraform deploy
 terraform -chdir=${INFRA_DIR}/lambda init -backend-config="env/${STAGE}.s3.tfbackend"
 terraform -chdir=${INFRA_DIR}/lambda apply -var-file=env/${STAGE}.tfvars -auto-approve

@@ -7,14 +7,19 @@ import type {
   CreateRegisterTokenServiceDto,
   GetRegisterTokenService,
 } from '@/interfaces';
+import type { RegisterTokenRepository } from '@/repositories';
 
 @injectable()
 export class RegisterController {
   constructor(
     @inject('CreateRegisterTokenService')
     private readonly createRegisterTokenService: CreateRegisterTokenService,
+
     @inject('GetRegisterTokenService')
     private readonly getRegisterTokenService: GetRegisterTokenService,
+
+    @inject('RegisterTokenRepository')
+    private readonly registerTokenRepository: RegisterTokenRepository,
   ) {}
 
   public async create(request: FastifyRequest, reply: FastifyReply) {
@@ -31,5 +36,12 @@ export class RegisterController {
     const response = await this.getRegisterTokenService.execute({ token });
 
     return reply.code(HttpStatusCodesEnum.OK).send(response);
+  }
+
+  // Temporary route to get all register tokens
+  public async find(_: FastifyRequest, reply: FastifyReply) {
+    const data = this.registerTokenRepository.find();
+
+    return reply.code(HttpStatusCodesEnum.OK).send(data);
   }
 }

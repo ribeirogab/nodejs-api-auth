@@ -15,6 +15,9 @@ export class UserRouter implements Router {
     _?: unknown,
     done?: (err?: Error) => void,
   ) {
+    // Temporarily route to get all users
+    app.get('/', this.userController.find.bind(this.userController));
+
     app.post('/', this.userController.create.bind(this.userController));
 
     if (done) {
