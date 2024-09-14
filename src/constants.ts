@@ -8,7 +8,7 @@ export enum HttpMethodEnum {
   PUT = 'PUT',
 }
 
-export enum HttpCustomErrorCodeEnum {
+export enum AppErrorCodeEnum {
   RegisterTokenNotFound = 'register_token_not_found',
 }
 

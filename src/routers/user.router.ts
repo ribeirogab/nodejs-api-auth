@@ -10,8 +10,16 @@ export class UserRouter implements Router {
     @inject('UserController') private readonly userController: UserController,
   ) {}
 
-  public routes(app: FastifyInstance) {
+  public routes(
+    app: FastifyInstance,
+    _?: unknown,
+    done?: (err?: Error) => void,
+  ) {
     app.post('/', this.userController.create.bind(this.userController));
+
+    if (done) {
+      done();
+    }
 
     return app;
   }

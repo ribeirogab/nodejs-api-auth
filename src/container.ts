@@ -2,6 +2,7 @@ import { container } from 'tsyringe';
 
 import { EnvConfig } from './configs';
 import { RegisterController, UserController } from './controllers';
+import { ErrorHandler } from './errors/error-handler';
 import { RegisterTokenRepository, UserRepository } from './repositories';
 import { AppRouter, RegisterRouter, UserRouter } from './routers';
 import {
@@ -9,6 +10,9 @@ import {
   CreateUserService,
   GetRegisterTokenService,
 } from './services';
+
+// Error handling
+container.registerSingleton<ErrorHandler>('ErrorHandler', ErrorHandler);
 
 // Configs
 container.registerSingleton<EnvConfig>('EnvConfig', EnvConfig);

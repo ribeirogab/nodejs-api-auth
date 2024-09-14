@@ -11,13 +11,21 @@ export class RegisterRouter implements Router {
     private readonly registerController: RegisterController,
   ) {}
 
-  public routes(app: FastifyInstance) {
+  public routes(
+    app: FastifyInstance,
+    _?: unknown,
+    done?: (err?: Error) => void,
+  ) {
     app.post('/', this.registerController.create.bind(this.registerController));
 
     app.get(
       '/:token',
       this.registerController.findById.bind(this.registerController),
     );
+
+    if (done) {
+      done();
+    }
 
     return app;
   }

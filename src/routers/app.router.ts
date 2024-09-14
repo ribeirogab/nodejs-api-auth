@@ -11,7 +11,11 @@ export class AppRouter implements Router {
     @inject('UserRouter') private readonly userRouter: Router,
   ) {}
 
-  public routes(app: FastifyInstance): FastifyInstance {
+  public routes(
+    app: FastifyInstance,
+    _options?: unknown,
+    done?: (err?: Error) => void,
+  ): FastifyInstance {
     app.get('/health', async (_, reply) =>
       reply.send().code(HttpStatusCodesEnum.OK),
     );
@@ -23,6 +27,10 @@ export class AppRouter implements Router {
     app.register(this.userRouter.routes.bind(this.userRouter), {
       prefix: '/v1/user',
     });
+
+    if (done) {
+      done();
+    }
 
     return app;
   }

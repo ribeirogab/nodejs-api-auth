@@ -1,5 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 
+import { AppErrorCodeEnum, HttpStatusCodesEnum } from '@/constants';
+import { AppError } from '@/errors';
 import type {
   GetRegisterTokenServiceDto,
   GetRegisterTokenService as GetRegisterTokenServiceInterface,
@@ -24,7 +26,10 @@ export class GetRegisterTokenService
     });
 
     if (!registerToken) {
-      throw new Error('Token not found or expired');
+      throw new AppError({
+        message: AppErrorCodeEnum.RegisterTokenNotFound,
+        status_code: HttpStatusCodesEnum.NOT_FOUND,
+      });
     }
 
     return registerToken;
