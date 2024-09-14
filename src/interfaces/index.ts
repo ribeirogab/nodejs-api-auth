@@ -10,3 +10,8 @@ export * from './repositories/user.repository';
 
 // Routers
 export * from './routers/router';
+
+// Services
+export * from './services/create-register-token.service';
+export * from './services/get-register-token.service';
+export * from './services/create-user.service';

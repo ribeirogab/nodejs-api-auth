@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import { inject, injectable } from 'tsyringe';
 
 import type { UserController } from '@/controllers';
-import type { Router, User } from '@/interfaces';
+import type { Router } from '@/interfaces';
 
 @injectable()
 export class UserRouter implements Router {
@@ -11,12 +11,7 @@ export class UserRouter implements Router {
   ) {}
 
   public routes(app: FastifyInstance) {
-    app.get('/', this.userController.list.bind(this.userController));
-
-    app.post<{ Body: User }>(
-      '/',
-      this.userController.create.bind(this.userController),
-    );
+    app.post('/', this.userController.create.bind(this.userController));
 
     return app;
   }

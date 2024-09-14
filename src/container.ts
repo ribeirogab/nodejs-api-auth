@@ -1,9 +1,9 @@
 import { container } from 'tsyringe';
 
 import { EnvConfig } from './configs';
-import { UserController } from './controllers';
+import { RegisterController, UserController } from './controllers';
 import { UserRepository } from './repositories';
-import { AppRouter, UserRouter } from './routers';
+import { AppRouter, RegisterRouter, UserRouter } from './routers';
 import { CreateUserService, ListUsersService } from './services';
 
 // Configs
@@ -26,6 +26,12 @@ container.registerSingleton<ListUsersService>(
 // Controllers
 container.registerSingleton<UserController>('UserController', UserController);
 
+container.registerSingleton<RegisterController>(
+  'RegisterController',
+  RegisterController,
+);
+
 // Routers
+container.registerSingleton<RegisterRouter>('RegisterRouter', RegisterRouter);
 container.registerSingleton<UserRouter>('UserRouter', UserRouter);
 container.registerSingleton<AppRouter>('AppRouter', AppRouter);
