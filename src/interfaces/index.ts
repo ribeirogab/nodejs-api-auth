@@ -6,8 +6,13 @@ export * from './configs/env.config';
 export * from './models/register-token';
 export * from './models/user';
 
+// Providers
+export * from './providers/unique-id.provider';
+export * from './providers/email.provider';
+
 // Repositories
 export * from './repositories/register-token.repository';
+export * from './repositories/email-template.repository';
 export * from './repositories/user.repository';
 
 // Routers

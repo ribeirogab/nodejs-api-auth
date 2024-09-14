@@ -3,7 +3,7 @@ import type { RegisterTokenRepository as RegisterTokenRepositoryInterface } from
 
 /** DynamoDB structure
  - PK: register-token
- - SK: id:{id}::external_id:{external_id}::type:{type}
+ - SK: id:{id}::type:{type}::external_id:{external_id}
  - Content: { email, token, type, external_id }
  - TTL: INT
  */

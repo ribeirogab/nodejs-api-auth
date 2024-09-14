@@ -29,11 +29,13 @@
     "http-status-codes": "^2.3.0",
     "reflect-metadata": "^0.2.2",
     "tsyringe": "^4.8.0",
+    "uuid": "^10.0.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@ribeirogab/eslint-config": "^2.0.1",
     "@types/node": "^22.5.4",
+    "@types/uuid": "^10.0.0",
     "@vitest/coverage-v8": "^2.0.5",
     "dotenv": "^16.4.5",
     "eslint-plugin-prettier": "^5.2.1",

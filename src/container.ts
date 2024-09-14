@@ -3,7 +3,12 @@ import { container } from 'tsyringe';
 import { EnvConfig } from './configs';
 import { RegisterController, UserController } from './controllers';
 import { ErrorHandler } from './errors/error-handler';
-import { RegisterTokenRepository, UserRepository } from './repositories';
+import { EmailProvider, UniqueIdProvider } from './providers';
+import {
+  EmailTemplateRepository,
+  RegisterTokenRepository,
+  UserRepository,
+} from './repositories';
 import { AppRouter, RegisterRouter, UserRouter } from './routers';
 import {
   CreateRegisterTokenService,
@@ -17,10 +22,23 @@ container.registerSingleton<ErrorHandler>('ErrorHandler', ErrorHandler);
 // Configs
 container.registerSingleton<EnvConfig>('EnvConfig', EnvConfig);
 
+// Providers
+container.registerSingleton<EmailProvider>('EmailProvider', EmailProvider);
+
+container.registerSingleton<UniqueIdProvider>(
+  'UniqueIdProvider',
+  UniqueIdProvider,
+);
+
 // Repositories
 container.registerSingleton<RegisterTokenRepository>(
   'RegisterTokenRepository',
   RegisterTokenRepository,
+);
+
+container.registerSingleton<EmailTemplateRepository>(
+  'EmailTemplateRepository',
+  EmailTemplateRepository,
 );
 
 container.registerSingleton<UserRepository>('UserRepository', UserRepository);

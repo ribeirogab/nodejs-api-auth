@@ -27,3 +27,11 @@ export enum LogLevelsEnum {
   Error = 'error',
   Info = 'info',
 }
+
+export enum EmailProviderEnum {
+  Resend = 'resend',
+}
+
+export enum UniqueIdProviderEnum {
+  Uuid = 'uuid',
+}
