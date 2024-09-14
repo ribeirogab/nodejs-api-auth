@@ -8,7 +8,10 @@ import type { Router } from '@/interfaces';
 export class AppRouter implements Router {
   constructor(
     @inject('RegisterRouter') private readonly registerRouter: Router,
+
     @inject('UserRouter') private readonly userRouter: Router,
+
+    @inject('AuthRouter') private readonly authRouter: Router,
   ) {}
 
   public routes(
@@ -26,6 +29,10 @@ export class AppRouter implements Router {
 
     app.register(this.userRouter.routes.bind(this.userRouter), {
       prefix: '/v1/user',
+    });
+
+    app.register(this.authRouter.routes.bind(this.authRouter), {
+      prefix: '/v1/auth',
     });
 
     if (done) {

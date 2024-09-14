@@ -29,3 +29,4 @@ export * from './routers/router';
 export * from './services/create-register-token.service';
 export * from './services/get-register-token.service';
 export * from './services/create-user.service';
+export * from './services/auth.service';

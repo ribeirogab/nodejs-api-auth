@@ -2,11 +2,11 @@ import { container } from 'tsyringe';
 
 import { EmailAdapter, HashAdapter, UniqueIdAdapter } from './adapters';
 import { EnvConfig } from './configs';
-import { RegisterController, UserController } from './controllers';
+import { AuthController, RegisterController, UserController } from './controllers';
 import { ErrorHandlingMiddleware } from './middlewares';
 import { EmailTemplateRepository, RegisterTokenRepository, UserRepository } from './repositories';
-import { AppRouter, RegisterRouter, UserRouter } from './routers';
-import { CreateRegisterTokenService, CreateUserService, GetRegisterTokenService } from './services';
+import { AppRouter, AuthRouter, RegisterRouter, UserRouter } from './routers';
+import { AuthService, CreateRegisterTokenService, CreateUserService, GetRegisterTokenService } from './services';
 
 // Adapters
 container.registerSingleton<UniqueIdAdapter>('UniqueIdAdapter', UniqueIdAdapter);
@@ -28,12 +28,15 @@ container.registerSingleton<UserRepository>('UserRepository', UserRepository);
 container.registerSingleton<CreateRegisterTokenService>('CreateRegisterTokenService', CreateRegisterTokenService);
 container.registerSingleton<GetRegisterTokenService>('GetRegisterTokenService', GetRegisterTokenService);
 container.registerSingleton<CreateUserService>('CreateUserService', CreateUserService);
+container.registerSingleton<AuthService>('AuthService', AuthService);
 
 // Controllers
 container.registerSingleton<RegisterController>('RegisterController', RegisterController);
 container.registerSingleton<UserController>('UserController', UserController);
+container.registerSingleton<AuthController>('AuthController', AuthController);
 
 // Routers
 container.registerSingleton<RegisterRouter>('RegisterRouter', RegisterRouter);
 container.registerSingleton<UserRouter>('UserRouter', UserRouter);
+container.registerSingleton<AuthRouter>('AuthRouter', AuthRouter);
 container.registerSingleton<AppRouter>('AppRouter', AppRouter);
