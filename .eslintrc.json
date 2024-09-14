@@ -5,6 +5,23 @@
   },
   "overrides": [
     {
+      "files": ["src/container.ts"],
+      "rules": {
+        "prettier/prettier": [
+          "error",
+          {
+            "arrowParens": "always",
+            "trailingComma": "all",
+            "singleQuote": true,
+            "endOfLine": "auto",
+            "printWidth": 300,
+            "tabWidth": 2,
+            "semi": true
+          }
+        ]
+      }
+    },
+    {
       "files": ["tsup.config.ts", "vitest.workspace.ts", "vitest.config.ts"],
       "rules": {
         "import/no-default-export": "off"

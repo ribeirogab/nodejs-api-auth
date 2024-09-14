@@ -9,6 +9,7 @@ export * from './models/user';
 // Adapters
 export * from './adapters/unique-id.adapter';
 export * from './adapters/email.adapter';
+export * from './adapters/hash.adapter';
 
 // Repositories
 export * from './repositories/register-token.repository';

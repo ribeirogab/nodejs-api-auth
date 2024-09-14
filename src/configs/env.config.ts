@@ -4,6 +4,7 @@ import { injectable } from 'tsyringe';
 
 import {
   EmailProviderEnum,
+  HashProviderEnum,
   NodeEnvEnum,
   StageEnum,
   UniqueIdProviderEnum,
@@ -30,6 +31,10 @@ export class EnvConfig implements EnvConfigInterface {
   public readonly UNIQUE_ID_PROVIDER = get('UNIQUE_ID_PROVIDER')
     .default(UniqueIdProviderEnum.Uuid)
     .asEnum(Object.values(UniqueIdProviderEnum));
+
+  public readonly HASH_PROVIDER = get('HASH_PROVIDER')
+    .default(HashProviderEnum.Crypto)
+    .asEnum(Object.values(HashProviderEnum));
 
   public readonly WEBSITE_BASE_URL = get('WEBSITE_BASE_URL')
     .default(`http://localhost:${this.PORT}`)

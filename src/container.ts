@@ -1,20 +1,12 @@
 import { container } from 'tsyringe';
 
-import { EmailAdapter, UniqueIdAdapter } from './adapters';
+import { EmailAdapter, HashAdapter, UniqueIdAdapter } from './adapters';
 import { EnvConfig } from './configs';
 import { RegisterController, UserController } from './controllers';
 import { ErrorHandler } from './errors/error-handler';
-import {
-  EmailTemplateRepository,
-  RegisterTokenRepository,
-  UserRepository,
-} from './repositories';
+import { EmailTemplateRepository, RegisterTokenRepository, UserRepository } from './repositories';
 import { AppRouter, RegisterRouter, UserRouter } from './routers';
-import {
-  CreateRegisterTokenService,
-  CreateUserService,
-  GetRegisterTokenService,
-} from './services';
+import { CreateRegisterTokenService, CreateUserService, GetRegisterTokenService } from './services';
 
 // Error handling
 container.registerSingleton<ErrorHandler>('ErrorHandler', ErrorHandler);
@@ -23,49 +15,23 @@ container.registerSingleton<ErrorHandler>('ErrorHandler', ErrorHandler);
 container.registerSingleton<EnvConfig>('EnvConfig', EnvConfig);
 
 // Adapters
+container.registerSingleton<UniqueIdAdapter>('UniqueIdAdapter', UniqueIdAdapter);
 container.registerSingleton<EmailAdapter>('EmailAdapter', EmailAdapter);
-
-container.registerSingleton<UniqueIdAdapter>(
-  'UniqueIdAdapter',
-  UniqueIdAdapter,
-);
+container.registerSingleton<HashAdapter>('HashAdapter', HashAdapter);
 
 // Repositories
-container.registerSingleton<RegisterTokenRepository>(
-  'RegisterTokenRepository',
-  RegisterTokenRepository,
-);
-
-container.registerSingleton<EmailTemplateRepository>(
-  'EmailTemplateRepository',
-  EmailTemplateRepository,
-);
-
+container.registerSingleton<RegisterTokenRepository>('RegisterTokenRepository', RegisterTokenRepository);
+container.registerSingleton<EmailTemplateRepository>('EmailTemplateRepository', EmailTemplateRepository);
 container.registerSingleton<UserRepository>('UserRepository', UserRepository);
 
 // Services
-container.registerSingleton<CreateUserService>(
-  'CreateUserService',
-  CreateUserService,
-);
-
-container.registerSingleton<CreateRegisterTokenService>(
-  'CreateRegisterTokenService',
-  CreateRegisterTokenService,
-);
-
-container.registerSingleton<GetRegisterTokenService>(
-  'GetRegisterTokenService',
-  GetRegisterTokenService,
-);
+container.registerSingleton<CreateRegisterTokenService>('CreateRegisterTokenService', CreateRegisterTokenService);
+container.registerSingleton<GetRegisterTokenService>('GetRegisterTokenService', GetRegisterTokenService);
+container.registerSingleton<CreateUserService>('CreateUserService', CreateUserService);
 
 // Controllers
+container.registerSingleton<RegisterController>('RegisterController', RegisterController);
 container.registerSingleton<UserController>('UserController', UserController);
-
-container.registerSingleton<RegisterController>(
-  'RegisterController',
-  RegisterController,
-);
 
 // Routers
 container.registerSingleton<RegisterRouter>('RegisterRouter', RegisterRouter);

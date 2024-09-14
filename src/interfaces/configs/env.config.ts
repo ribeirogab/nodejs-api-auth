@@ -1,5 +1,6 @@
 import type {
   EmailProviderEnum,
+  HashProviderEnum,
   NodeEnvEnum,
   StageEnum,
   UniqueIdProviderEnum,
@@ -13,5 +14,6 @@ export type EnvConfig = {
 
   EMAIL_PROVIDER: EmailProviderEnum;
   UNIQUE_ID_PROVIDER: UniqueIdProviderEnum;
+  HASH_PROVIDER: HashProviderEnum;
   WEBSITE_BASE_URL: string;
 };

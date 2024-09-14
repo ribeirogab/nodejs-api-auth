@@ -36,3 +36,7 @@ export enum EmailProviderEnum {
 export enum UniqueIdProviderEnum {
   Uuid = 'uuid',
 }
+
+export enum HashProviderEnum {
+  Crypto = 'crypto',
+}

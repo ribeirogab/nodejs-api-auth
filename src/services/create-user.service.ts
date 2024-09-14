@@ -5,6 +5,7 @@ import { AppError } from '@/errors';
 import type {
   CreateUserDto,
   CreateUserService as CreateUserServiceInterface,
+  HashAdapter,
   RegisterTokenRepository,
   UserRepository,
 } from '@/interfaces';
@@ -16,6 +17,8 @@ export class CreateUserService implements CreateUserServiceInterface {
     private readonly registerTokenRepository: RegisterTokenRepository,
 
     @inject('UserRepository') private readonly userRepository: UserRepository,
+
+    @inject('HashAdapter') private readonly hashAdapter: HashAdapter,
   ) {}
 
   public async execute({ token, user }: CreateUserDto): Promise<void> {
@@ -41,6 +44,16 @@ export class CreateUserService implements CreateUserServiceInterface {
       });
     }
 
-    await this.userRepository.create(user);
+    const salt = this.hashAdapter.generateSalt();
+    const hashedPassword = this.hashAdapter.hash({
+      text: user.password,
+      salt,
+    });
+
+    await this.userRepository.create({
+      ...user,
+      password: hashedPassword,
+      password_salt: salt,
+    });
   }
 }
