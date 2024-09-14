@@ -1,0 +1,38 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - .github/workflows/deploy.yml
+      - package.json
+      - infra/**
+      - src/**
+
+env:
+  STAGE: ${{ github.ref == 'refs/heads/main' && 'prod' || github.ref == 'refs/heads/develop' && 'dev' }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Run deploy-lambda.sh script
+        run: |
+          chmod +x ./infra/scripts/deploy-lambda.sh
+          ./infra/scripts/deploy-lambda.sh ${{ env.STAGE }}
+
+      - name: Post Terraform State
+        if: failure()
+        run: terraform show
