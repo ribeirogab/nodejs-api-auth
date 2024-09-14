@@ -6,9 +6,9 @@ export * from './configs/env.config';
 export * from './models/register-token';
 export * from './models/user';
 
-// Providers
-export * from './providers/unique-id.provider';
-export * from './providers/email.provider';
+// Adapters
+export * from './adapters/unique-id.adapter';
+export * from './adapters/email.adapter';
 
 // Repositories
 export * from './repositories/register-token.repository';

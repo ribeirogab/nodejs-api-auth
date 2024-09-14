@@ -3,8 +3,8 @@ import { inject, injectable } from 'tsyringe';
 import { ResendProvider } from './resend.provider';
 import { EmailProviderEnum } from '@/constants';
 import {
-  EmailProvider as EmailProviderInterface,
-  EmailProviderSendDto,
+  EmailAdapter as EmailAdapterInterface,
+  EmailAdapterSendDto,
   EnvConfig,
 } from '@/interfaces';
 
@@ -13,8 +13,8 @@ const providers = {
 };
 
 @injectable()
-export class EmailProvider implements EmailProviderInterface {
-  private readonly provider: EmailProviderInterface;
+export class EmailAdapter implements EmailAdapterInterface {
+  private readonly provider: EmailAdapterInterface;
 
   constructor(
     @inject('EnvConfig')
@@ -23,7 +23,7 @@ export class EmailProvider implements EmailProviderInterface {
     this.provider = new providers[this.envConfig.EMAIL_PROVIDER]();
   }
 
-  public async send(dto: EmailProviderSendDto): Promise<void> {
+  public async send(dto: EmailAdapterSendDto): Promise<void> {
     return this.provider.send(dto);
   }
 }

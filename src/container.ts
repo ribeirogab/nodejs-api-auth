@@ -1,9 +1,9 @@
 import { container } from 'tsyringe';
 
+import { EmailAdapter, UniqueIdAdapter } from './adapters';
 import { EnvConfig } from './configs';
 import { RegisterController, UserController } from './controllers';
 import { ErrorHandler } from './errors/error-handler';
-import { EmailProvider, UniqueIdProvider } from './providers';
 import {
   EmailTemplateRepository,
   RegisterTokenRepository,
@@ -22,12 +22,12 @@ container.registerSingleton<ErrorHandler>('ErrorHandler', ErrorHandler);
 // Configs
 container.registerSingleton<EnvConfig>('EnvConfig', EnvConfig);
 
-// Providers
-container.registerSingleton<EmailProvider>('EmailProvider', EmailProvider);
+// Adapters
+container.registerSingleton<EmailAdapter>('EmailAdapter', EmailAdapter);
 
-container.registerSingleton<UniqueIdProvider>(
-  'UniqueIdProvider',
-  UniqueIdProvider,
+container.registerSingleton<UniqueIdAdapter>(
+  'UniqueIdAdapter',
+  UniqueIdAdapter,
 );
 
 // Repositories

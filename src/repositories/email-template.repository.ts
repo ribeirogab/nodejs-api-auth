@@ -3,12 +3,12 @@ import path from 'node:path';
 
 import { injectable } from 'tsyringe';
 
+import { emailTemplatesDirname } from '@/adapters/email/templates';
 import {
   EmailTemplateEnum,
   type EmailTemplateRepositoryGetTemplateDto,
   EmailTemplateRepository as EmailTemplateRepositoryInterface,
 } from '@/interfaces';
-import { emailTemplatesDirname } from '@/providers/email/templates';
 
 @injectable()
 export class EmailTemplateRepository

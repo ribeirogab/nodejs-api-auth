@@ -4,7 +4,7 @@ import { UuidProvider } from './uuid.provider';
 import { UniqueIdProviderEnum } from '@/constants';
 import {
   type EnvConfig,
-  UniqueIdProvider as UniqueIdProviderInterface,
+  UniqueIdAdapter as UniqueIdAdapterInterface,
 } from '@/interfaces';
 
 const providers = {
@@ -12,8 +12,8 @@ const providers = {
 };
 
 @injectable()
-export class UniqueIdProvider implements UniqueIdProviderInterface {
-  private readonly provider: UniqueIdProviderInterface;
+export class UniqueIdAdapter implements UniqueIdAdapterInterface {
+  private readonly provider: UniqueIdAdapterInterface;
 
   constructor(
     @inject('EnvConfig')
