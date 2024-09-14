@@ -2,14 +2,23 @@ import { container } from 'tsyringe';
 
 import { EnvConfig } from './configs';
 import { RegisterController, UserController } from './controllers';
-import { UserRepository } from './repositories';
+import { RegisterTokenRepository, UserRepository } from './repositories';
 import { AppRouter, RegisterRouter, UserRouter } from './routers';
-import { CreateUserService, ListUsersService } from './services';
+import {
+  CreateRegisterTokenService,
+  CreateUserService,
+  GetRegisterTokenService,
+} from './services';
 
 // Configs
 container.registerSingleton<EnvConfig>('EnvConfig', EnvConfig);
 
 // Repositories
+container.registerSingleton<RegisterTokenRepository>(
+  'RegisterTokenRepository',
+  RegisterTokenRepository,
+);
+
 container.registerSingleton<UserRepository>('UserRepository', UserRepository);
 
 // Services
@@ -18,9 +27,14 @@ container.registerSingleton<CreateUserService>(
   CreateUserService,
 );
 
-container.registerSingleton<ListUsersService>(
-  'ListUsersService',
-  ListUsersService,
+container.registerSingleton<CreateRegisterTokenService>(
+  'CreateRegisterTokenService',
+  CreateRegisterTokenService,
+);
+
+container.registerSingleton<GetRegisterTokenService>(
+  'GetRegisterTokenService',
+  GetRegisterTokenService,
 );
 
 // Controllers

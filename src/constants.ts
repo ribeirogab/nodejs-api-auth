@@ -8,6 +8,10 @@ export enum HttpMethodEnum {
   PUT = 'PUT',
 }
 
+export enum HttpCustomErrorCodeEnum {
+  RegisterTokenNotFound = 'register_token_not_found',
+}
+
 export enum NodeEnvEnum {
   Development = 'development',
   Production = 'production',

@@ -5,6 +5,13 @@ import type {
   UserRepository as UserRepositoryInterface,
 } from '@/interfaces';
 
+/** DynamoDB structure
+ - PK: user
+ - SK: id:{id}
+ - Content: { name, email, password, id, created_at }
+ - TTL: INT
+ */
+
 @injectable()
 export class UserRepository implements UserRepositoryInterface {
   private readonly users: User[] = [];
@@ -16,7 +23,7 @@ export class UserRepository implements UserRepositoryInterface {
     });
   }
 
-  public async find(): Promise<User[]> {
-    return this.users;
+  public async findByEmail(dto: { email: string }): Promise<User | null> {
+    return this.users.find((user) => user.email === dto.email) || null;
   }
 }

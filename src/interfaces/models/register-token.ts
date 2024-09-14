@@ -3,7 +3,7 @@ export enum RegisterTokenTypeEnum {
 }
 
 export type RegisterToken = {
-  data: Record<string, string>;
   type: RegisterTokenTypeEnum;
+  external_id: string;
   id: string;
 };
