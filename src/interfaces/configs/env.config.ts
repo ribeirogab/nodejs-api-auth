@@ -11,7 +11,7 @@ export type EnvConfig = {
   PORT: number;
   CORS_ORIGIN: string;
 
-  // Adapters
   EMAIL_PROVIDER: EmailProviderEnum;
   UNIQUE_ID_PROVIDER: UniqueIdProviderEnum;
+  WEBSITE_BASE_URL: string;
 };

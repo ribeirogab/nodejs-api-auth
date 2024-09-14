@@ -10,6 +10,7 @@ export enum HttpMethodEnum {
 
 export enum AppErrorCodeEnum {
   RegisterTokenNotFound = 'register_token_not_found',
+  EmailAlreadyInUse = 'email_already_in_use',
 }
 
 export enum NodeEnvEnum {

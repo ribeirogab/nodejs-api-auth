@@ -30,4 +30,8 @@ export class EnvConfig implements EnvConfigInterface {
   public readonly UNIQUE_ID_PROVIDER = get('UNIQUE_ID_PROVIDER')
     .default(UniqueIdProviderEnum.Uuid)
     .asEnum(Object.values(UniqueIdProviderEnum));
+
+  public readonly WEBSITE_BASE_URL = get('WEBSITE_BASE_URL')
+    .default(`http://localhost:${this.PORT}`)
+    .asString();
 }

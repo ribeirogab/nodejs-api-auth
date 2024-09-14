@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
     "target": "es2016",
     "module": "commonjs",
     "esModuleInterop": true,
@@ -11,9 +10,10 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "types": ["vitest/globals"],
-    "baseUrl": "./src",
+    "baseUrl": "./",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["./src/*"],
+      "@tests/*": ["./tests/*"]
     }
   }
 }

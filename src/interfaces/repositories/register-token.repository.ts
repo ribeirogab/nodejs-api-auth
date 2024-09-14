@@ -1,7 +1,7 @@
 import type { RegisterToken } from '../models/register-token';
 
 export interface RegisterTokenRepository {
-  create(dto: Omit<RegisterToken, 'id'>): Promise<void>;
+  create(dto: RegisterToken): Promise<void>;
 
   findById(dto: { id: string }): Promise<RegisterToken | null>;
 
