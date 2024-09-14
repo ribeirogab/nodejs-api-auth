@@ -27,7 +27,7 @@ cd dist && zip -r ../dist.zip ./* && cd ..
 
 # Node.js layer package (node_modules) - nodejs-layer.zip
 npm i --prefix ${INFRA_DIR}/lambda/layers/nodejs
-cd ${INFRA_DIR}/lambda/layers && zip -r ${APP_DIR}/nodejs-layer.zip nodejs && cd ..
+cd ${INFRA_DIR}/lambda/layers && zip -r ${APP_DIR}/nodejs-layer.zip nodejs > /dev/null 2>&1 && cd ..
 
 # Remove Terraform local state files
 rm -rf ${INFRA_DIR}/lambda/.terraform
