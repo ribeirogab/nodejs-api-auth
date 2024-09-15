@@ -6,6 +6,7 @@ import type {
   LoginService,
   LoginServiceDto,
   LogoutService,
+  RefreshLoginService,
 } from '@/interfaces';
 
 @injectable()
@@ -16,12 +17,27 @@ export class AuthController {
 
     @inject('LogoutService')
     private readonly logoutService: LogoutService,
+
+    @inject('RefreshLoginService')
+    private readonly refreshLoginService: RefreshLoginService,
   ) {}
 
   public async login(request: FastifyRequest, reply: FastifyReply) {
     const { email, password } = request.body as LoginServiceDto;
 
     const response = await this.loginService.execute({ email, password });
+
+    return reply.code(HttpStatusCodesEnum.OK).send(response);
+  }
+
+  public async refreshLogin(request: FastifyRequest, reply: FastifyReply) {
+    const { refresh_token: refreshToken } = request.body as {
+      refresh_token: string;
+    };
+
+    const response = await this.refreshLoginService.execute({
+      refresh_token: refreshToken,
+    });
 
     return reply.code(HttpStatusCodesEnum.OK).send(response);
   }

@@ -18,6 +18,11 @@ export class AuthRouter implements Router {
   ) {
     app.post('/login', this.authController.login.bind(this.authController));
 
+    app.post(
+      '/login/refresh',
+      this.authController.refreshLogin.bind(this.authController),
+    );
+
     app.delete('/logout', this.authController.logout.bind(this.authController));
 
     if (done) {

@@ -13,6 +13,7 @@ import {
   GetRegisterTokenService,
   LoginService,
   LogoutService,
+  RefreshLoginService,
 } from './services';
 
 // Adapters
@@ -33,6 +34,7 @@ container.registerSingleton<ErrorHandlingMiddleware>('ErrorHandlingMiddleware', 
 // Repositories
 container.registerSingleton<RegisterTokenRepository>('RegisterTokenRepository', RegisterTokenRepository);
 container.registerSingleton<EmailTemplateRepository>('EmailTemplateRepository', EmailTemplateRepository);
+container.registerSingleton<RefreshLoginService>('RefreshLoginService', RefreshLoginService);
 container.registerSingleton<SessionRepository>('SessionRepository', SessionRepository);
 container.registerSingleton<UserRepository>('UserRepository', UserRepository);
 

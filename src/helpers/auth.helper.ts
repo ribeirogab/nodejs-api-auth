@@ -20,7 +20,7 @@ export class AuthHelper implements AuthHelperInterface {
 
   public async createSession({
     user_id,
-  }: AuthHelperGenerateSessionDto): Promise<Session> {
+  }: AuthHelperGenerateSessionDto): Promise<Omit<Session, 'user_id'>> {
     const accessToken = this.jwtConfig.sign({
       expiresIn: '15m',
       subject: user_id,
@@ -43,6 +43,10 @@ export class AuthHelper implements AuthHelperInterface {
       user_id,
     });
 
-    return session;
+    return {
+      refresh_token: session.refresh_token,
+      access_token: session.access_token,
+      expires_at: session.expires_at,
+    };
   }
 }

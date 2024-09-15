@@ -5,5 +5,7 @@ export type AuthHelperGenerateSessionDto = {
 };
 
 export interface AuthHelper {
-  createSession(dto: AuthHelperGenerateSessionDto): Promise<Session>;
+  createSession(
+    dto: AuthHelperGenerateSessionDto,
+  ): Promise<Omit<Session, 'user_id'>>;
 }

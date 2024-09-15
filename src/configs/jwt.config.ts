@@ -23,7 +23,7 @@ export class JwtConfig {
     });
   }
 
-  public verify(token: string) {
-    return verify(token, this.envConfig.JWT_SECRET);
+  public verify<T>(token: string) {
+    return verify(token, this.envConfig.JWT_SECRET) as T;
   }
 }
