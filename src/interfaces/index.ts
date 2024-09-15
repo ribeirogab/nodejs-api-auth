@@ -20,9 +20,7 @@ export * from './models/user';
 
 // Repositories
 export * from './repositories/verification-code.repository';
-export * from './repositories/register-token.repository';
 export * from './repositories/email-template.repository';
-export * from './repositories/user-token.repository';
 export * from './repositories/session.repository';
 export * from './repositories/user.repository';
 

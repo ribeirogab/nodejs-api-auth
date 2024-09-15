@@ -2,28 +2,12 @@ import { container } from 'tsyringe';
 
 import { EmailAdapter, HashAdapter, LoggerAdapter, UniqueIdAdapter } from './adapters';
 import { EnvConfig, JwtConfig } from './configs';
-import { AuthController, RegisterController, RegistrationController, UserController } from './controllers';
+import { AuthController, RegistrationController } from './controllers';
 import { AuthHelper } from './helpers';
 import { EnsureAuthenticatedMiddleware, ErrorHandlingMiddleware, RequestAuditMiddleware } from './middlewares';
-import {
-  EmailTemplateRepository,
-  RegisterTokenRepository,
-  SessionRepository,
-  UserRepository,
-  UserTokenRepository,
-  VerificationCodeRepository,
-} from './repositories';
-import { AppRouter, AuthRouter, RegisterRouter, RegistrationRouter, UserRouter } from './routers';
-import {
-  CreateRegisterTokenService,
-  CreateUserService,
-  GetRegisterTokenService,
-  LoginService,
-  LogoutService,
-  RefreshLoginService,
-  RegistrationConfirmService,
-  RegistrationService,
-} from './services';
+import { EmailTemplateRepository, SessionRepository, UserRepository, VerificationCodeRepository } from './repositories';
+import { AppRouter, AuthRouter, RegistrationRouter } from './routers';
+import { LoginService, LogoutService, RefreshLoginService, RegistrationConfirmService, RegistrationService } from './services';
 
 // Adapters
 container.registerSingleton<UniqueIdAdapter>('UniqueIdAdapter', UniqueIdAdapter);
@@ -45,31 +29,22 @@ container.registerSingleton<RequestAuditMiddleware>('RequestAuditMiddleware', Re
 
 // Repositories
 container.registerSingleton<VerificationCodeRepository>('VerificationCodeRepository', VerificationCodeRepository);
-container.registerSingleton<RegisterTokenRepository>('RegisterTokenRepository', RegisterTokenRepository);
 container.registerSingleton<EmailTemplateRepository>('EmailTemplateRepository', EmailTemplateRepository);
 container.registerSingleton<RefreshLoginService>('RefreshLoginService', RefreshLoginService);
-container.registerSingleton<UserTokenRepository>('UserTokenRepository', UserTokenRepository);
 container.registerSingleton<SessionRepository>('SessionRepository', SessionRepository);
 container.registerSingleton<UserRepository>('UserRepository', UserRepository);
 
 // Services
-container.registerSingleton<CreateRegisterTokenService>('CreateRegisterTokenService', CreateRegisterTokenService);
 container.registerSingleton<RegistrationConfirmService>('RegistrationConfirmService', RegistrationConfirmService);
-container.registerSingleton<GetRegisterTokenService>('GetRegisterTokenService', GetRegisterTokenService);
 container.registerSingleton<RegistrationService>('RegistrationService', RegistrationService);
-container.registerSingleton<CreateUserService>('CreateUserService', CreateUserService);
 container.registerSingleton<LogoutService>('LogoutService', LogoutService);
 container.registerSingleton<LoginService>('LoginService', LoginService);
 
 // Controllers
 container.registerSingleton<RegistrationController>('RegistrationController', RegistrationController);
-container.registerSingleton<RegisterController>('RegisterController', RegisterController);
-container.registerSingleton<UserController>('UserController', UserController);
 container.registerSingleton<AuthController>('AuthController', AuthController);
 
 // Routers
 container.registerSingleton<RegistrationRouter>('RegistrationRouter', RegistrationRouter);
-container.registerSingleton<RegisterRouter>('RegisterRouter', RegisterRouter);
-container.registerSingleton<UserRouter>('UserRouter', UserRouter);
 container.registerSingleton<AuthRouter>('AuthRouter', AuthRouter);
 container.registerSingleton<AppRouter>('AppRouter', AppRouter);

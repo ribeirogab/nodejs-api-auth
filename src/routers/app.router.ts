@@ -9,10 +9,6 @@ export class AppRouter implements Router {
   constructor(
     @inject('RegistrationRouter') private readonly registrationRouter: Router,
 
-    @inject('RegisterRouter') private readonly registerRouter: Router,
-
-    @inject('UserRouter') private readonly userRouter: Router,
-
     @inject('AuthRouter') private readonly authRouter: Router,
   ) {}
 
@@ -27,14 +23,6 @@ export class AppRouter implements Router {
 
     app.register(this.registrationRouter.routes.bind(this.registrationRouter), {
       prefix: '/v1/registration',
-    });
-
-    app.register(this.registerRouter.routes.bind(this.registerRouter), {
-      prefix: '/v1/register',
-    });
-
-    app.register(this.userRouter.routes.bind(this.userRouter), {
-      prefix: '/v1/user',
     });
 
     app.register(this.authRouter.routes.bind(this.authRouter), {
