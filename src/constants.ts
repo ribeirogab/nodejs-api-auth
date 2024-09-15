@@ -9,6 +9,7 @@ export enum HttpMethodEnum {
 }
 
 export enum AppErrorCodeEnum {
+  VerificationCodeNotFound = 'verification_code_not_found',
   RegisterTokenNotFound = 'register_token_not_found',
   EmailAlreadyInUse = 'email_already_in_use',
 }

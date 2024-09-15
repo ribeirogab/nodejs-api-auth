@@ -1,5 +1,6 @@
 import type {
   VerificationCode,
+  VerificationCodeRepositoryFilterDto,
   VerificationCodeRepository as VerificationCodeRepositoryInterface,
 } from '@/interfaces';
 
@@ -20,28 +21,26 @@ export class VerificationCodeRepository
     this.codes.push({ ...dto, code });
   }
 
-  public async findByCode(dto: {
-    code: string;
-  }): Promise<VerificationCode | null> {
-    const code = this.codes.find(
-      (registerCode) => registerCode.code === dto.code,
+  public async findOne({
+    code,
+    type,
+  }: VerificationCodeRepositoryFilterDto): Promise<VerificationCode | null> {
+    const verificationCode = this.codes.find(
+      (registerCode) =>
+        registerCode.code === code && registerCode.type === type,
     );
 
-    return code || null;
+    return verificationCode || null;
   }
 
-  public async findByContent(dto: {
-    content: string;
-  }): Promise<VerificationCode | null> {
-    const code = this.codes.find(
-      (registerCode) => registerCode.content === dto.content,
+  public async deleteOne({
+    code,
+    type,
+  }: VerificationCodeRepositoryFilterDto): Promise<void> {
+    this.codes = this.codes.filter(
+      (verificationCode) =>
+        verificationCode.code !== code && verificationCode.type !== type,
     );
-
-    return code || null;
-  }
-
-  public async deleteByCode(dto: { code: string }): Promise<void> {
-    this.codes = this.codes.filter((code) => code.code !== dto.code);
   }
 
   private generateCode(length: number): string {

@@ -21,6 +21,8 @@ import {
   LoginService,
   LogoutService,
   RefreshLoginService,
+  RegistrationConfirmService,
+  RegistrationService,
 } from './services';
 
 // Adapters
@@ -52,7 +54,9 @@ container.registerSingleton<UserRepository>('UserRepository', UserRepository);
 
 // Services
 container.registerSingleton<CreateRegisterTokenService>('CreateRegisterTokenService', CreateRegisterTokenService);
+container.registerSingleton<RegistrationConfirmService>('RegistrationConfirmService', RegistrationConfirmService);
 container.registerSingleton<GetRegisterTokenService>('GetRegisterTokenService', GetRegisterTokenService);
+container.registerSingleton<RegistrationService>('RegistrationService', RegistrationService);
 container.registerSingleton<CreateUserService>('CreateUserService', CreateUserService);
 container.registerSingleton<LogoutService>('LogoutService', LogoutService);
 container.registerSingleton<LoginService>('LoginService', LoginService);
