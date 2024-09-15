@@ -23,12 +23,6 @@ export enum StageEnum {
   Dev = 'dev',
 }
 
-export enum LogLevelsEnum {
-  Debug = 'debug',
-  Error = 'error',
-  Info = 'info',
-}
-
 export enum EmailProviderEnum {
   Resend = 'resend',
 }

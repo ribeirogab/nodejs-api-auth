@@ -4,7 +4,7 @@ import { EmailAdapter, HashAdapter, LoggerAdapter, UniqueIdAdapter } from './ada
 import { EnvConfig, JwtConfig } from './configs';
 import { AuthController, RegisterController, UserController } from './controllers';
 import { AuthHelper } from './helpers';
-import { ErrorHandlingMiddleware } from './middlewares';
+import { EnsureAuthenticatedMiddleware, ErrorHandlingMiddleware, RequestAuditMiddleware } from './middlewares';
 import { EmailTemplateRepository, RegisterTokenRepository, SessionRepository, UserRepository } from './repositories';
 import { AppRouter, AuthRouter, RegisterRouter, UserRouter } from './routers';
 import {
@@ -30,7 +30,9 @@ container.registerSingleton<JwtConfig>('JwtConfig', JwtConfig);
 container.registerSingleton<AuthHelper>('AuthHelper', AuthHelper);
 
 // Middlewares
+container.registerSingleton<EnsureAuthenticatedMiddleware>('EnsureAuthenticatedMiddleware', EnsureAuthenticatedMiddleware);
 container.registerSingleton<ErrorHandlingMiddleware>('ErrorHandlingMiddleware', ErrorHandlingMiddleware);
+container.registerSingleton<RequestAuditMiddleware>('RequestAuditMiddleware', RequestAuditMiddleware);
 
 // Repositories
 container.registerSingleton<RegisterTokenRepository>('RegisterTokenRepository', RegisterTokenRepository);

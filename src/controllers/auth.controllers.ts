@@ -42,8 +42,8 @@ export class AuthController {
     return reply.code(HttpStatusCodesEnum.OK).send(response);
   }
 
-  public async logout(_request: FastifyRequest, reply: FastifyReply) {
-    await this.logoutService.execute({ user_id: '123' });
+  public async logout(request: FastifyRequest, reply: FastifyReply) {
+    await this.logoutService.execute({ user_id: request.user?.id });
 
     return reply.code(HttpStatusCodesEnum.NO_CONTENT).send();
   }

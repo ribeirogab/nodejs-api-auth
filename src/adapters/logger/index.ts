@@ -25,12 +25,16 @@ export class LoggerAdapter implements LoggerAdapterInterface {
     );
   }
 
-  public info(message: string, ...meta: LoggerMeta[]): void {
-    return this.provider.info(message, ...meta);
-  }
-
   public error(message: string, ...meta: LoggerMeta[]): void {
     return this.provider.error(message, ...meta);
+  }
+
+  public warn(message: string, ...meta: LoggerMeta[]): void {
+    return this.provider.warn(message, ...meta);
+  }
+
+  public info(message: string, ...meta: LoggerMeta[]): void {
+    return this.provider.info(message, ...meta);
   }
 
   public debug(message: string, ...meta: LoggerMeta[]): void {

@@ -5,12 +5,12 @@ import { injectable } from 'tsyringe';
 import {
   EmailProviderEnum,
   HashProviderEnum,
-  LogLevelsEnum,
   LoggerProviderEnum,
   NodeEnvEnum,
   StageEnum,
   UniqueIdProviderEnum,
 } from '@/constants';
+import { LogLevelKeyEnum } from '@/interfaces';
 
 @injectable()
 export class EnvConfig {
@@ -46,7 +46,10 @@ export class EnvConfig {
     .default(`http://localhost:${this.PORT}`)
     .asString();
 
+  public readonly IS_DEBUG =
+    this.NODE_ENV !== NodeEnvEnum.Production || this.STAGE === StageEnum.Dev;
+
   public readonly LOG_LEVEL = get('LOG_LEVEL')
-    .default(LogLevelsEnum.Info)
-    .asEnum(Object.values(LogLevelsEnum));
+    .default(this.IS_DEBUG ? LogLevelKeyEnum.debug : LogLevelKeyEnum.info)
+    .asEnum(Object.keys(LogLevelKeyEnum));
 }
