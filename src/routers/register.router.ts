@@ -19,7 +19,18 @@ export class RegisterRouter implements Router {
     // Temporarily route to get all tokens
     app.get('/', this.registerController.find.bind(this.registerController));
 
-    app.post('/', this.registerController.create.bind(this.registerController));
+    app.post(
+      '/',
+      {
+        config: {
+          rateLimit: {
+            timeWindow: 1000 * 60, // 1 minute
+            max: 5,
+          },
+        },
+      },
+      this.registerController.create.bind(this.registerController),
+    );
 
     app.get(
       '/:token',

@@ -52,4 +52,12 @@ export class EnvConfig {
   public readonly LOG_LEVEL = get('LOG_LEVEL')
     .default(this.IS_DEBUG ? LogLevelKeyEnum.debug : LogLevelKeyEnum.info)
     .asEnum(Object.keys(LogLevelKeyEnum));
+
+  public readonly RATE_LIMIT_MAX = get('RATE_LIMIT_MAX')
+    .default(60)
+    .asIntPositive();
+
+  public readonly RATE_LIMIT_TIME_WINDOW_MS = get('RATE_LIMIT_TIME_WINDOW_MS')
+    .default(1000 * 60) // 1 minute
+    .asIntPositive();
 }

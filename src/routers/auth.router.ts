@@ -22,14 +22,17 @@ export class AuthRouter implements Router {
   ) {
     app.post('/login', this.authController.login.bind(this.authController));
 
-    app.route({
-      handler: this.authController.login.bind(this.authController),
-      url: '/login/refresh',
-      method: 'POST',
-      preHandler: this.ensureAuthenticatedMiddleware.middleware.bind(
-        this.ensureAuthenticatedMiddleware,
-      ),
-    });
+    app.post(
+      '/login/refresh',
+      {
+        preHandler: [
+          this.ensureAuthenticatedMiddleware.middleware.bind(
+            this.ensureAuthenticatedMiddleware,
+          ),
+        ],
+      },
+      this.authController.login.bind(this.authController),
+    );
 
     app.delete('/logout', this.authController.logout.bind(this.authController));
 

@@ -1,13 +1,17 @@
 import type { FastifyError, FastifyReply, FastifyRequest } from 'fastify';
-import { injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 import { ZodError } from 'zod';
 
 import { HttpStatusCodesEnum } from '@/constants';
 import { AppError } from '@/errors';
-import type { ErrorMiddleware } from '@/interfaces';
+import type { ErrorMiddleware, LoggerAdapter } from '@/interfaces';
 
 @injectable()
 export class ErrorHandlingMiddleware implements ErrorMiddleware {
+  constructor(@inject('LoggerAdapter') private readonly logger: LoggerAdapter) {
+    this.logger.setPrefix(this.logger, ErrorHandlingMiddleware.name);
+  }
+
   public async middleware(
     error: FastifyError,
     _request: FastifyRequest,
@@ -28,13 +32,27 @@ export class ErrorHandlingMiddleware implements ErrorMiddleware {
         details: error.issues,
       };
 
-      console.error('Payload validation error', errorBody);
+      this.logger.error('Payload validation error', errorBody);
 
       return reply.status(errorBody.status_code).send({
         status_code: HttpStatusCodesEnum.BAD_REQUEST,
         message: 'Payload validation error',
         details: error.issues,
       });
+    }
+
+    if (
+      error.statusCode &&
+      error.statusCode !== HttpStatusCodesEnum.INTERNAL_SERVER_ERROR
+    ) {
+      const errorBody = {
+        status_code: error.statusCode,
+        message: error.message,
+      };
+
+      this.logger.error('Fastify error', errorBody);
+
+      return reply.status(error.statusCode).send(errorBody);
     }
 
     console.error('Unknown error', error);
