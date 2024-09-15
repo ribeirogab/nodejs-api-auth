@@ -1,5 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
+import type { EnvConfig } from '@/configs';
 import {
   type CreateRegisterTokenServiceDto,
   type CreateRegisterTokenService as CreateRegisterTokenServiceInterface,
@@ -7,7 +8,6 @@ import {
   EmailTemplateEnum,
   type EmailTemplateRepository,
   type EmailTemplateRepositoryCompleteRegisterVariables,
-  type EnvConfig,
   type RegisterTokenRepository,
   RegisterTokenTypeEnum,
   type UniqueIdAdapter,

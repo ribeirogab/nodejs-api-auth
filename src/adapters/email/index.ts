@@ -1,11 +1,11 @@
 import { inject, injectable } from 'tsyringe';
 
 import { ResendProvider } from './resend.provider';
+import type { EnvConfig } from '@/configs';
 import { EmailProviderEnum } from '@/constants';
 import {
   EmailAdapter as EmailAdapterInterface,
   EmailAdapterSendDto,
-  EnvConfig,
 } from '@/interfaces';
 
 const providers = {

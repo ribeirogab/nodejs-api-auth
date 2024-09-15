@@ -3,10 +3,6 @@ export * from './adapters/unique-id.adapter';
 export * from './adapters/email.adapter';
 export * from './adapters/hash.adapter';
 
-// Configs
-export * from './configs/logger.config';
-export * from './configs/env.config';
-
 // Middlewares
 export * from './middlewares/error.middleware';
 export * from './middlewares/hook.middleware';

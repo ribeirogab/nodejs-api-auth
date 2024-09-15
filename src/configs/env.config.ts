@@ -9,10 +9,9 @@ import {
   StageEnum,
   UniqueIdProviderEnum,
 } from '@/constants';
-import type { EnvConfig as EnvConfigInterface } from '@/interfaces';
 
 @injectable()
-export class EnvConfig implements EnvConfigInterface {
+export class EnvConfig {
   public readonly NODE_ENV = get('NODE_ENV')
     .default(NodeEnvEnum.Production)
     .asEnum(Object.values(NodeEnvEnum));

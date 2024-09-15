@@ -1,9 +1,9 @@
 import { inject, injectable } from 'tsyringe';
 
 import { CryptoProvider } from './crypto.provider';
+import type { EnvConfig } from '@/configs';
 import { HashProviderEnum } from '@/constants';
 import type {
-  EnvConfig,
   HashAdapterCompareDto,
   HashAdapterHashDto,
   HashAdapter as HashAdapterInterface,

@@ -1,11 +1,9 @@
 import { inject, injectable } from 'tsyringe';
 
 import { UuidProvider } from './uuid.provider';
+import type { EnvConfig } from '@/configs';
 import { UniqueIdProviderEnum } from '@/constants';
-import {
-  type EnvConfig,
-  UniqueIdAdapter as UniqueIdAdapterInterface,
-} from '@/interfaces';
+import type { UniqueIdAdapter as UniqueIdAdapterInterface } from '@/interfaces';
 
 const providers = {
   [UniqueIdProviderEnum.Uuid]: UuidProvider,
