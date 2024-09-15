@@ -7,7 +7,13 @@ import { AuthHelper } from './helpers';
 import { ErrorHandlingMiddleware } from './middlewares';
 import { EmailTemplateRepository, RegisterTokenRepository, SessionRepository, UserRepository } from './repositories';
 import { AppRouter, AuthRouter, RegisterRouter, UserRouter } from './routers';
-import { AuthService, CreateRegisterTokenService, CreateUserService, GetRegisterTokenService } from './services';
+import {
+  AuthService,
+  CreateRegisterTokenService,
+  CreateUserService,
+  GetRegisterTokenService,
+  LogoutService,
+} from './services';
 
 // Adapters
 container.registerSingleton<UniqueIdAdapter>('UniqueIdAdapter', UniqueIdAdapter);
@@ -34,6 +40,7 @@ container.registerSingleton<UserRepository>('UserRepository', UserRepository);
 container.registerSingleton<CreateRegisterTokenService>('CreateRegisterTokenService', CreateRegisterTokenService);
 container.registerSingleton<GetRegisterTokenService>('GetRegisterTokenService', GetRegisterTokenService);
 container.registerSingleton<CreateUserService>('CreateUserService', CreateUserService);
+container.registerSingleton<LogoutService>('LogoutService', LogoutService);
 container.registerSingleton<AuthService>('AuthService', AuthService);
 
 // Controllers
