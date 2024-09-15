@@ -41,14 +41,27 @@ export class RequestAuditMiddleware implements HookMiddleware {
   }
 
   private cleanSensitiveData(data: unknown): unknown {
-    const cleanedData = { ...(data as Record<string, unknown>) };
+    const cleanDataRecursively = (
+      obj: Record<string, unknown>,
+    ): Record<string, unknown> => {
+      const cleanedData = { ...obj };
 
-    for (const field of this.sensitiveFields) {
-      if (cleanedData[field]) {
-        cleanedData[field] = '[REDACTED]';
+      for (const key in cleanedData) {
+        if (this.sensitiveFields.includes(key)) {
+          cleanedData[key] = '[REDACTED]';
+        } else if (
+          typeof cleanedData[key] === 'object' &&
+          cleanedData[key] !== null
+        ) {
+          cleanedData[key] = cleanDataRecursively(
+            cleanedData[key] as Record<string, unknown>,
+          );
+        }
       }
-    }
 
-    return cleanedData;
+      return cleanedData;
+    };
+
+    return cleanDataRecursively(data as Record<string, unknown>);
   }
 }

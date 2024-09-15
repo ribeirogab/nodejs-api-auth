@@ -1,6 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 
 import type {
+  LoggerAdapter,
   UniqueIdAdapter,
   User,
   UserRepository as UserRepositoryInterface,
@@ -20,6 +21,9 @@ export class UserRepository implements UserRepositoryInterface {
   constructor(
     @inject('UniqueIdAdapter')
     private readonly uniqueIdAdapter: UniqueIdAdapter,
+
+    @inject('LoggerAdapter')
+    private readonly logger: LoggerAdapter,
   ) {}
 
   public async create(dto: Omit<User, 'id'>): Promise<User> {
@@ -29,6 +33,8 @@ export class UserRepository implements UserRepositoryInterface {
     };
 
     this.users.push(user);
+
+    this.logger.debug('User created:', user);
 
     return user;
   }

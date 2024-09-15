@@ -21,7 +21,7 @@ export const main = () => {
   const logger = container.resolve(LoggerAdapter);
 
   app.setErrorHandler(errorHandler.middleware.bind(errorHandler));
-  app.addHook('onRequest', requestAudit.middleware.bind(requestAudit));
+  app.addHook('preHandler', requestAudit.middleware.bind(requestAudit));
   app.register(rateLimit.plugin, rateLimit.options);
 
   app.register(cors, {

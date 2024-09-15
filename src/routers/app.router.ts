@@ -7,6 +7,8 @@ import type { Router } from '@/interfaces';
 @injectable()
 export class AppRouter implements Router {
   constructor(
+    @inject('RegistrationRouter') private readonly registrationRouter: Router,
+
     @inject('RegisterRouter') private readonly registerRouter: Router,
 
     @inject('UserRouter') private readonly userRouter: Router,
@@ -22,6 +24,10 @@ export class AppRouter implements Router {
     app.get('/health', async (_, reply) =>
       reply.send().code(HttpStatusCodesEnum.OK),
     );
+
+    app.register(this.registrationRouter.routes.bind(this.registrationRouter), {
+      prefix: '/v1/registration',
+    });
 
     app.register(this.registerRouter.routes.bind(this.registerRouter), {
       prefix: '/v1/register',

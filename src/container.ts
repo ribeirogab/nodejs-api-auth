@@ -2,7 +2,7 @@ import { container } from 'tsyringe';
 
 import { EmailAdapter, HashAdapter, LoggerAdapter, UniqueIdAdapter } from './adapters';
 import { EnvConfig, JwtConfig } from './configs';
-import { AuthController, RegisterController, UserController } from './controllers';
+import { AuthController, RegisterController, RegistrationController, UserController } from './controllers';
 import { AuthHelper } from './helpers';
 import { EnsureAuthenticatedMiddleware, ErrorHandlingMiddleware, RequestAuditMiddleware } from './middlewares';
 import {
@@ -13,7 +13,7 @@ import {
   UserTokenRepository,
   VerificationCodeRepository,
 } from './repositories';
-import { AppRouter, AuthRouter, RegisterRouter, UserRouter } from './routers';
+import { AppRouter, AuthRouter, RegisterRouter, RegistrationRouter, UserRouter } from './routers';
 import {
   CreateRegisterTokenService,
   CreateUserService,
@@ -62,11 +62,13 @@ container.registerSingleton<LogoutService>('LogoutService', LogoutService);
 container.registerSingleton<LoginService>('LoginService', LoginService);
 
 // Controllers
+container.registerSingleton<RegistrationController>('RegistrationController', RegistrationController);
 container.registerSingleton<RegisterController>('RegisterController', RegisterController);
 container.registerSingleton<UserController>('UserController', UserController);
 container.registerSingleton<AuthController>('AuthController', AuthController);
 
 // Routers
+container.registerSingleton<RegistrationRouter>('RegistrationRouter', RegistrationRouter);
 container.registerSingleton<RegisterRouter>('RegisterRouter', RegisterRouter);
 container.registerSingleton<UserRouter>('UserRouter', UserRouter);
 container.registerSingleton<AuthRouter>('AuthRouter', AuthRouter);

@@ -1,4 +1,7 @@
+import { inject, injectable } from 'tsyringe';
+
 import type {
+  LoggerAdapter,
   VerificationCode,
   VerificationCodeRepositoryFilterDto,
   VerificationCodeRepository as VerificationCodeRepositoryInterface,
@@ -11,14 +14,24 @@ import type {
  - TTL: INT
  */
 
+@injectable()
 export class VerificationCodeRepository
   implements VerificationCodeRepositoryInterface
 {
   private codes: VerificationCode[] = [];
 
+  constructor(@inject('LoggerAdapter') private readonly logger: LoggerAdapter) {
+    this.logger.setPrefix(this.logger, VerificationCodeRepository.name);
+  }
+
   public async create(dto: Omit<VerificationCode, 'code'>): Promise<void> {
     const code = this.generateCode(6);
-    this.codes.push({ ...dto, code });
+
+    const verificationCode = { ...dto, code };
+
+    this.codes.push(verificationCode);
+
+    this.logger.debug('Verification code created:', verificationCode);
   }
 
   public async findOne({
