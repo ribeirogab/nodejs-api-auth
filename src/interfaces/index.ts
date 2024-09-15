@@ -1,5 +1,6 @@
 // Adapters
 export * from './adapters/unique-id.adapter';
+export * from './adapters/logger.adapter';
 export * from './adapters/email.adapter';
 export * from './adapters/hash.adapter';
 

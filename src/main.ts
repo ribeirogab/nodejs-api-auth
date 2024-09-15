@@ -3,6 +3,7 @@ import { fastify } from 'fastify';
 import 'reflect-metadata';
 import { container } from 'tsyringe';
 
+import { LoggerAdapter } from './adapters';
 import { EnvConfig } from './configs';
 import { HttpMethodEnum } from './constants';
 import './container';
@@ -15,6 +16,7 @@ export const main = () => {
   const errorHandler = container.resolve(ErrorHandlingMiddleware);
   const envConfig = container.resolve(EnvConfig);
   const appRouter = container.resolve(AppRouter);
+  const logger = container.resolve(LoggerAdapter);
 
   app.setErrorHandler(errorHandler.middleware.bind(errorHandler));
 
@@ -31,5 +33,5 @@ export const main = () => {
 
   app.register(appRouter.routes.bind(appRouter));
 
-  return { app, envConfig };
+  return { app, logger, envConfig };
 };

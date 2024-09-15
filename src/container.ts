@@ -1,6 +1,6 @@
 import { container } from 'tsyringe';
 
-import { EmailAdapter, HashAdapter, UniqueIdAdapter } from './adapters';
+import { EmailAdapter, HashAdapter, LoggerAdapter, UniqueIdAdapter } from './adapters';
 import { EnvConfig, JwtConfig } from './configs';
 import { AuthController, RegisterController, UserController } from './controllers';
 import { AuthHelper } from './helpers';
@@ -18,6 +18,7 @@ import {
 
 // Adapters
 container.registerSingleton<UniqueIdAdapter>('UniqueIdAdapter', UniqueIdAdapter);
+container.registerSingleton<LoggerAdapter>('LoggerAdapter', LoggerAdapter);
 container.registerSingleton<EmailAdapter>('EmailAdapter', EmailAdapter);
 container.registerSingleton<HashAdapter>('HashAdapter', HashAdapter);
 

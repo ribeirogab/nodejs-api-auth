@@ -40,3 +40,7 @@ export enum UniqueIdProviderEnum {
 export enum HashProviderEnum {
   Crypto = 'crypto',
 }
+
+export enum LoggerProviderEnum {
+  Winston = 'winston',
+}

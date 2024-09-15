@@ -5,6 +5,8 @@ import { injectable } from 'tsyringe';
 import {
   EmailProviderEnum,
   HashProviderEnum,
+  LogLevelsEnum,
+  LoggerProviderEnum,
   NodeEnvEnum,
   StageEnum,
   UniqueIdProviderEnum,
@@ -36,7 +38,15 @@ export class EnvConfig {
     .default(HashProviderEnum.Crypto)
     .asEnum(Object.values(HashProviderEnum));
 
+  public readonly LOGGER_PROVIDER = get('LOGGER_PROVIDER')
+    .default(LoggerProviderEnum.Winston)
+    .asEnum(Object.values(LoggerProviderEnum));
+
   public readonly WEBSITE_BASE_URL = get('WEBSITE_BASE_URL')
     .default(`http://localhost:${this.PORT}`)
     .asString();
+
+  public readonly LOG_LEVEL = get('LOG_LEVEL')
+    .default(LogLevelsEnum.Info)
+    .asEnum(Object.values(LogLevelsEnum));
 }
