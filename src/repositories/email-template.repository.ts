@@ -50,8 +50,8 @@ export class EmailTemplateRepository
   }
 
   private replaceVariables({
-    variables,
     templateString,
+    variables,
   }: {
     variables: Record<string, string>;
     templateString: string;

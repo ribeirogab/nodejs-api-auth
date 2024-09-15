@@ -59,7 +59,7 @@ export class CreateRegisterTokenService
     const completeRegisterUrl = `${this.envConfig.WEBSITE_BASE_URL}/complete-register/?token=${token}`;
 
     await this.emailAdapter.send({
-      subject: 'Complete seu cadastro',
+      subject: 'Complete your register',
       to: email,
       html: this.emailTemplateRepository.getTemplate({
         template: EmailTemplateEnum.CompleteRegister,

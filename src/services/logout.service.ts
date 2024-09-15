@@ -13,7 +13,7 @@ export class LogoutService implements LogoutServiceInterface {
     private sessionRepository: SessionRepository,
   ) {}
 
-  async execute({ user_id }: LogoutServiceDto): Promise<void> {
+  public async execute({ user_id }: LogoutServiceDto): Promise<void> {
     await this.sessionRepository.deleteByUserId({ user_id });
   }
 }
