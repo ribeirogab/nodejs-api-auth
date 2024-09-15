@@ -11,6 +11,7 @@ import {
   SessionRepository,
   UserRepository,
   UserTokenRepository,
+  VerificationCodeRepository,
 } from './repositories';
 import { AppRouter, AuthRouter, RegisterRouter, UserRouter } from './routers';
 import {
@@ -41,6 +42,7 @@ container.registerSingleton<ErrorHandlingMiddleware>('ErrorHandlingMiddleware', 
 container.registerSingleton<RequestAuditMiddleware>('RequestAuditMiddleware', RequestAuditMiddleware);
 
 // Repositories
+container.registerSingleton<VerificationCodeRepository>('VerificationCodeRepository', VerificationCodeRepository);
 container.registerSingleton<RegisterTokenRepository>('RegisterTokenRepository', RegisterTokenRepository);
 container.registerSingleton<EmailTemplateRepository>('EmailTemplateRepository', EmailTemplateRepository);
 container.registerSingleton<RefreshLoginService>('RefreshLoginService', RefreshLoginService);

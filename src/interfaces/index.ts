@@ -12,6 +12,7 @@ export * from './middlewares/error.middleware';
 export * from './middlewares/hook.middleware';
 
 // Models
+export * from './models/verification-code';
 export * from './models/register-token';
 export * from './models/user-token';
 export * from './models/session';
