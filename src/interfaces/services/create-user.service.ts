@@ -1,10 +1,10 @@
 import type { User } from '../models/user';
 
-export type CreateUserDto = {
+export type CreateUserServiceDto = {
   user: Omit<User, 'id' | 'password_salt'>;
   token: string;
 };
 
 export interface CreateUserService {
-  execute(dto: CreateUserDto): Promise<void>;
+  execute(dto: CreateUserServiceDto): Promise<void>;
 }

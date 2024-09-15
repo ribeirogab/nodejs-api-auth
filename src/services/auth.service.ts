@@ -3,6 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import { HttpStatusCodesEnum } from '@/constants';
 import { AppError } from '@/errors';
 import type {
+  AuthHelper,
   AuthServiceDto,
   AuthService as AuthServiceInterface,
   HashAdapter,
@@ -13,9 +14,14 @@ import type {
 @injectable()
 export class AuthService implements AuthServiceInterface {
   constructor(
-    @inject('UserRepository') private readonly userRepository: UserRepository,
+    @inject('UserRepository')
+    private readonly userRepository: UserRepository,
 
-    @inject('HashAdapter') private readonly hashAdapter: HashAdapter,
+    @inject('HashAdapter')
+    private readonly hashAdapter: HashAdapter,
+
+    @inject('AuthHelper')
+    private readonly authHelper: AuthHelper,
   ) {}
 
   public async execute({
@@ -44,10 +50,12 @@ export class AuthService implements AuthServiceInterface {
       });
     }
 
+    const session = await this.authHelper.createSession({ user_id: user.id });
+
     return {
-      expires_at: new Date().toISOString(),
-      refresh_token: 'refresh_token',
-      access_token: 'access_token',
+      refresh_token: session.refresh_token,
+      access_token: session.access_token,
+      expires_at: session.expires_at,
     };
   }
 }

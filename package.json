@@ -30,6 +30,7 @@
     "env-var": "^7.5.0",
     "fastify": "^4.28.1",
     "http-status-codes": "^2.3.0",
+    "jsonwebtoken": "^9.0.2",
     "reflect-metadata": "^0.2.2",
     "tsyringe": "^4.8.0",
     "uuid": "^10.0.0",
@@ -37,6 +38,7 @@
   },
   "devDependencies": {
     "@ribeirogab/eslint-config": "^2.0.1",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^22.5.4",
     "@types/uuid": "^10.0.0",
     "@vitest/coverage-v8": "^2.0.5",

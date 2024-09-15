@@ -3,7 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import { AppErrorCodeEnum, HttpStatusCodesEnum } from '@/constants';
 import { AppError } from '@/errors';
 import type {
-  CreateUserDto,
+  CreateUserServiceDto,
   CreateUserService as CreateUserServiceInterface,
   HashAdapter,
   RegisterTokenRepository,
@@ -16,12 +16,14 @@ export class CreateUserService implements CreateUserServiceInterface {
     @inject('RegisterTokenRepository')
     private readonly registerTokenRepository: RegisterTokenRepository,
 
-    @inject('UserRepository') private readonly userRepository: UserRepository,
+    @inject('UserRepository')
+    private readonly userRepository: UserRepository,
 
-    @inject('HashAdapter') private readonly hashAdapter: HashAdapter,
+    @inject('HashAdapter')
+    private readonly hashAdapter: HashAdapter,
   ) {}
 
-  public async execute({ token, user }: CreateUserDto): Promise<void> {
+  public async execute({ token, user }: CreateUserServiceDto): Promise<void> {
     const registerToken = await this.registerTokenRepository.findById({
       id: token,
     });

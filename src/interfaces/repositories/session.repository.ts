@@ -1,7 +1,7 @@
 import type { Session } from '../models/session';
 
 export interface SessionRepository {
-  upsert(session: Session): Promise<void>;
+  upsert(session: Session): Promise<Session>;
 
   deleteByUserId({ user_id }: { user_id: string }): Promise<void>;
 

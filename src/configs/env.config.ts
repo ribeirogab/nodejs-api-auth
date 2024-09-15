@@ -22,6 +22,7 @@ export class EnvConfig {
 
   public readonly PORT = get('PORT').default(8080).asPortNumber();
   public readonly CORS_ORIGIN = get('CORS_ORIGIN').default('*').asString();
+  public readonly JWT_SECRET = get('JWT_SECRET').required().asString();
 
   public readonly EMAIL_PROVIDER = get('EMAIL_PROVIDER')
     .default(EmailProviderEnum.Resend)

@@ -3,6 +3,9 @@ export * from './adapters/unique-id.adapter';
 export * from './adapters/email.adapter';
 export * from './adapters/hash.adapter';
 
+// Helpers
+export * from './helpers/auth.helper';
+
 // Middlewares
 export * from './middlewares/error.middleware';
 export * from './middlewares/hook.middleware';

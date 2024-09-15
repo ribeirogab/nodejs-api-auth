@@ -22,11 +22,15 @@ export class UserRepository implements UserRepositoryInterface {
     private readonly uniqueIdAdapter: UniqueIdAdapter,
   ) {}
 
-  public async create(user: Omit<User, 'id'>): Promise<void> {
-    this.users.push({
+  public async create(dto: Omit<User, 'id'>): Promise<User> {
+    const user = {
       id: this.uniqueIdAdapter.generate(),
-      ...user,
-    });
+      ...dto,
+    };
+
+    this.users.push(user);
+
+    return user;
   }
 
   public async findByEmail(dto: { email: string }): Promise<User | null> {

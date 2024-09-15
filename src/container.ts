@@ -1,10 +1,11 @@
 import { container } from 'tsyringe';
 
 import { EmailAdapter, HashAdapter, UniqueIdAdapter } from './adapters';
-import { EnvConfig } from './configs';
+import { EnvConfig, JwtConfig } from './configs';
 import { AuthController, RegisterController, UserController } from './controllers';
+import { AuthHelper } from './helpers';
 import { ErrorHandlingMiddleware } from './middlewares';
-import { EmailTemplateRepository, RegisterTokenRepository, UserRepository } from './repositories';
+import { EmailTemplateRepository, RegisterTokenRepository, SessionRepository, UserRepository } from './repositories';
 import { AppRouter, AuthRouter, RegisterRouter, UserRouter } from './routers';
 import { AuthService, CreateRegisterTokenService, CreateUserService, GetRegisterTokenService } from './services';
 
@@ -15,6 +16,10 @@ container.registerSingleton<HashAdapter>('HashAdapter', HashAdapter);
 
 // Configs
 container.registerSingleton<EnvConfig>('EnvConfig', EnvConfig);
+container.registerSingleton<JwtConfig>('JwtConfig', JwtConfig);
+
+// Helpers
+container.registerSingleton<AuthHelper>('AuthHelper', AuthHelper);
 
 // Middlewares
 container.registerSingleton<ErrorHandlingMiddleware>('ErrorHandlingMiddleware', ErrorHandlingMiddleware);
@@ -22,6 +27,7 @@ container.registerSingleton<ErrorHandlingMiddleware>('ErrorHandlingMiddleware', 
 // Repositories
 container.registerSingleton<RegisterTokenRepository>('RegisterTokenRepository', RegisterTokenRepository);
 container.registerSingleton<EmailTemplateRepository>('EmailTemplateRepository', EmailTemplateRepository);
+container.registerSingleton<SessionRepository>('SessionRepository', SessionRepository);
 container.registerSingleton<UserRepository>('UserRepository', UserRepository);
 
 // Services
