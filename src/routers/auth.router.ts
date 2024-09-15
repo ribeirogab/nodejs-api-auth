@@ -16,9 +16,9 @@ export class AuthRouter implements Router {
     _?: unknown,
     done?: (err?: Error) => void,
   ) {
-    app.post('/', this.authController.login.bind(this.authController));
+    app.post('/login', this.authController.login.bind(this.authController));
 
-    app.delete('/', this.authController.logout.bind(this.authController));
+    app.delete('/logout', this.authController.logout.bind(this.authController));
 
     if (done) {
       done();
