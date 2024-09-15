@@ -8,7 +8,7 @@ import { ErrorHandlingMiddleware } from './middlewares';
 import { EmailTemplateRepository, RegisterTokenRepository, SessionRepository, UserRepository } from './repositories';
 import { AppRouter, AuthRouter, RegisterRouter, UserRouter } from './routers';
 import {
-  AuthService,
+  LoginService,
   CreateRegisterTokenService,
   CreateUserService,
   GetRegisterTokenService,
@@ -41,7 +41,7 @@ container.registerSingleton<CreateRegisterTokenService>('CreateRegisterTokenServ
 container.registerSingleton<GetRegisterTokenService>('GetRegisterTokenService', GetRegisterTokenService);
 container.registerSingleton<CreateUserService>('CreateUserService', CreateUserService);
 container.registerSingleton<LogoutService>('LogoutService', LogoutService);
-container.registerSingleton<AuthService>('AuthService', AuthService);
+container.registerSingleton<LoginService>('LoginService', LoginService);
 
 // Controllers
 container.registerSingleton<RegisterController>('RegisterController', RegisterController);

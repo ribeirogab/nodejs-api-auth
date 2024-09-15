@@ -2,22 +2,22 @@ import type { FastifyReply, FastifyRequest } from 'fastify';
 import { inject, injectable } from 'tsyringe';
 
 import { HttpStatusCodesEnum } from '@/constants';
-import type { AuthService, AuthServiceDto, LogoutService } from '@/interfaces';
+import type { LoginService, LoginServiceDto, LogoutService } from '@/interfaces';
 
 @injectable()
 export class AuthController {
   constructor(
-    @inject('AuthService')
-    private readonly authService: AuthService,
+    @inject('LoginService')
+    private readonly loginService: LoginService,
 
     @inject('LogoutService')
     private readonly logoutService: LogoutService,
   ) {}
 
   public async login(request: FastifyRequest, reply: FastifyReply) {
-    const { email, password } = request.body as AuthServiceDto;
+    const { email, password } = request.body as LoginServiceDto;
 
-    const response = await this.authService.execute({ email, password });
+    const response = await this.loginService.execute({ email, password });
 
     return reply.code(HttpStatusCodesEnum.OK).send(response);
   }

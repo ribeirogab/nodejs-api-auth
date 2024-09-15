@@ -4,15 +4,15 @@ import { HttpStatusCodesEnum } from '@/constants';
 import { AppError } from '@/errors';
 import type {
   AuthHelper,
-  AuthServiceDto,
-  AuthService as AuthServiceInterface,
+  LoginServiceDto,
+  LoginService as LoginServiceInterface,
   HashAdapter,
   Session,
   UserRepository,
 } from '@/interfaces';
 
 @injectable()
-export class AuthService implements AuthServiceInterface {
+export class LoginService implements LoginServiceInterface {
   constructor(
     @inject('UserRepository')
     private readonly userRepository: UserRepository,
@@ -27,7 +27,7 @@ export class AuthService implements AuthServiceInterface {
   public async execute({
     password,
     email,
-  }: AuthServiceDto): Promise<Omit<Session, 'user_id'>> {
+  }: LoginServiceDto): Promise<Omit<Session, 'user_id'>> {
     const user = await this.userRepository.findByEmail({ email });
 
     if (!user) {
