@@ -8,10 +8,10 @@ import { ErrorHandlingMiddleware } from './middlewares';
 import { EmailTemplateRepository, RegisterTokenRepository, SessionRepository, UserRepository } from './repositories';
 import { AppRouter, AuthRouter, RegisterRouter, UserRouter } from './routers';
 import {
-  LoginService,
   CreateRegisterTokenService,
   CreateUserService,
   GetRegisterTokenService,
+  LoginService,
   LogoutService,
 } from './services';
 

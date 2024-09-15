@@ -4,9 +4,9 @@ import { HttpStatusCodesEnum } from '@/constants';
 import { AppError } from '@/errors';
 import type {
   AuthHelper,
+  HashAdapter,
   LoginServiceDto,
   LoginService as LoginServiceInterface,
-  HashAdapter,
   Session,
   UserRepository,
 } from '@/interfaces';

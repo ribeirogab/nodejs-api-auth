@@ -2,7 +2,11 @@ import type { FastifyReply, FastifyRequest } from 'fastify';
 import { inject, injectable } from 'tsyringe';
 
 import { HttpStatusCodesEnum } from '@/constants';
-import type { LoginService, LoginServiceDto, LogoutService } from '@/interfaces';
+import type {
+  LoginService,
+  LoginServiceDto,
+  LogoutService,
+} from '@/interfaces';
 
 @injectable()
 export class AuthController {
