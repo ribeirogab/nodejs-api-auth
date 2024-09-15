@@ -1,10 +1,12 @@
-import type { RegisterToken } from '@/interfaces';
-import type { RegisterTokenRepository as RegisterTokenRepositoryInterface } from '@/interfaces/repositories/register-token.repository';
+import type {
+  RegisterToken,
+  RegisterTokenRepository as RegisterTokenRepositoryInterface,
+} from '@/interfaces';
 
 /** DynamoDB structure
  - PK: register-token
  - SK: id:{id}::type:{type}::external_id:{external_id}
- - Content: { email, token, type, external_id }
+ - Content: { id, type, external_id }
  - TTL: INT
  */
 

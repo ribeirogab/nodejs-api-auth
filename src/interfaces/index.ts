@@ -13,12 +13,14 @@ export * from './middlewares/hook.middleware';
 
 // Models
 export * from './models/register-token';
+export * from './models/user-token';
 export * from './models/session';
 export * from './models/user';
 
 // Repositories
 export * from './repositories/register-token.repository';
 export * from './repositories/email-template.repository';
+export * from './repositories/user-token.repository';
 export * from './repositories/session.repository';
 export * from './repositories/user.repository';
 

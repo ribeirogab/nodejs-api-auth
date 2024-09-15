@@ -5,7 +5,13 @@ import { EnvConfig, JwtConfig } from './configs';
 import { AuthController, RegisterController, UserController } from './controllers';
 import { AuthHelper } from './helpers';
 import { EnsureAuthenticatedMiddleware, ErrorHandlingMiddleware, RequestAuditMiddleware } from './middlewares';
-import { EmailTemplateRepository, RegisterTokenRepository, SessionRepository, UserRepository } from './repositories';
+import {
+  EmailTemplateRepository,
+  RegisterTokenRepository,
+  SessionRepository,
+  UserRepository,
+  UserTokenRepository,
+} from './repositories';
 import { AppRouter, AuthRouter, RegisterRouter, UserRouter } from './routers';
 import {
   CreateRegisterTokenService,
@@ -38,6 +44,7 @@ container.registerSingleton<RequestAuditMiddleware>('RequestAuditMiddleware', Re
 container.registerSingleton<RegisterTokenRepository>('RegisterTokenRepository', RegisterTokenRepository);
 container.registerSingleton<EmailTemplateRepository>('EmailTemplateRepository', EmailTemplateRepository);
 container.registerSingleton<RefreshLoginService>('RefreshLoginService', RefreshLoginService);
+container.registerSingleton<UserTokenRepository>('UserTokenRepository', UserTokenRepository);
 container.registerSingleton<SessionRepository>('SessionRepository', SessionRepository);
 container.registerSingleton<UserRepository>('UserRepository', UserRepository);
 
