@@ -52,8 +52,10 @@ export class RegistrationConfirmService
     await this.userRepository.create(user);
   }
 
-  private parseUser(content: string): User {
-    const user = JSON.parse(content) as User;
+  private parseUser(
+    content: Record<string, string | number>,
+  ): Omit<User, 'id'> {
+    const user = content as Omit<User, 'id'>;
 
     return user;
   }

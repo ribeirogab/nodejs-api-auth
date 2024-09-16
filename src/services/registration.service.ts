@@ -41,6 +41,18 @@ export class RegistrationService implements RegistrationServiceInterface {
       });
     }
 
+    const verificationCodeExists =
+      await this.verificationCodeRepository.findOneByContent({
+        content: { key: 'email', value: email },
+      });
+
+    if (verificationCodeExists) {
+      await this.verificationCodeRepository.deleteOne({
+        type: VerificationCodeTypeEnum.Registration,
+        code: verificationCodeExists.code,
+      });
+    }
+
     const salt = this.hashAdapter.generateSalt();
     const hashedPassword = this.hashAdapter.hash({
       text: password,
