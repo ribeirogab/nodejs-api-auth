@@ -2,11 +2,11 @@ import { container } from 'tsyringe';
 
 import { EmailAdapter, HashAdapter, LoggerAdapter, UniqueIdAdapter } from './adapters';
 import { EnvConfig, JwtConfig } from './configs';
-import { AuthController, RegistrationController } from './controllers';
+import { AuthController, PasswordController, RegistrationController } from './controllers';
 import { AuthHelper } from './helpers';
 import { EnsureAuthenticatedMiddleware, ErrorHandlingMiddleware, RequestAuditMiddleware } from './middlewares';
 import { EmailTemplateRepository, SessionRepository, UserRepository, VerificationCodeRepository } from './repositories';
-import { AppRouter, AuthRouter, RegistrationRouter } from './routers';
+import { AppRouter, AuthRouter, PasswordRouter, RegistrationRouter } from './routers';
 import { LoginService, LogoutService, RefreshLoginService, RegistrationConfirmService, RegistrationService } from './services';
 
 // Adapters
@@ -42,9 +42,11 @@ container.registerSingleton<LoginService>('LoginService', LoginService);
 
 // Controllers
 container.registerSingleton<RegistrationController>('RegistrationController', RegistrationController);
+container.registerSingleton<PasswordController>('PasswordController', PasswordController);
 container.registerSingleton<AuthController>('AuthController', AuthController);
 
 // Routers
 container.registerSingleton<RegistrationRouter>('RegistrationRouter', RegistrationRouter);
+container.registerSingleton<PasswordRouter>('PasswordRouter', PasswordRouter);
 container.registerSingleton<AuthRouter>('AuthRouter', AuthRouter);
 container.registerSingleton<AppRouter>('AppRouter', AppRouter);

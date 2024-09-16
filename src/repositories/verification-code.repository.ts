@@ -46,6 +46,18 @@ export class VerificationCodeRepository
     return verificationCode || null;
   }
 
+  public async findOneByContent({
+    content,
+  }: {
+    content: { key: string; value: string };
+  }): Promise<VerificationCode | null> {
+    const verificationCode = this.codes.find(
+      (registerCode) => registerCode.content[content.key] === content.value,
+    );
+
+    return verificationCode || null;
+  }
+
   public async deleteOne({
     code,
     type,

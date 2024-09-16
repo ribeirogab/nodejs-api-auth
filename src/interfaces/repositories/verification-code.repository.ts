@@ -16,4 +16,8 @@ export interface VerificationCodeRepository {
   ): Promise<VerificationCode | null>;
 
   deleteOne(dto: VerificationCodeRepositoryFilterDto): Promise<void>;
+
+  findOneByContent(dto: {
+    content: { key: string; value: string };
+  }): Promise<VerificationCode | null>;
 }

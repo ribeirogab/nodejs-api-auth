@@ -4,7 +4,6 @@ import type { HashAdapter } from '@/adapters';
 import { AppErrorCodeEnum, HttpStatusCodesEnum } from '@/constants';
 import { AppError } from '@/errors';
 import {
-  type LoggerAdapter,
   type RegistrationServiceDto,
   type RegistrationService as RegistrationServiceInterface,
   type User,
@@ -24,9 +23,6 @@ export class RegistrationService implements RegistrationServiceInterface {
 
     @inject('HashAdapter')
     private hashAdapter: HashAdapter,
-
-    @inject('LoggerAdapter')
-    private logger: LoggerAdapter,
   ) {}
 
   public async execute({
@@ -65,8 +61,8 @@ export class RegistrationService implements RegistrationServiceInterface {
 
     await this.verificationCodeRepository.create({
       type: VerificationCodeTypeEnum.Registration,
-      content: JSON.stringify(content),
       expires_at: expiresAt,
+      content,
     });
   }
 }
