@@ -29,12 +29,9 @@ export * from './routers/router';
 
 // Services
 export * from './services/recovery-password-link.service';
-export * from './services/create-register-token.service';
 export * from './services/registration-confirm.service';
-export * from './services/get-register-token.service';
 export * from './services/recovery-password.service';
 export * from './services/refresh-login.service';
 export * from './services/registration.service';
-export * from './services/create-user.service';
 export * from './services/logout.service';
 export * from './services/login.service';
