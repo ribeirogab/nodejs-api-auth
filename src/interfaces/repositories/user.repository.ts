@@ -8,5 +8,5 @@ export interface UserRepository {
   updateByEmail(dto: {
     email: string;
     update: Partial<Omit<User, 'id' | 'email' | 'created_at'>>;
-  }): Promise<User>;
+  }): Promise<void>;
 }

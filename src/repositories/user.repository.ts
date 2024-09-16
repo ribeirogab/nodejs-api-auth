@@ -43,8 +43,26 @@ export class UserRepository implements UserRepositoryInterface {
     return this.users.find((user) => user.email === dto.email) || null;
   }
 
-  // Temporary method to get all users
-  public find(): User[] {
-    return this.users;
+  public async updateByEmail({
+    update,
+    email,
+  }: {
+    update: Partial<Omit<User, 'id' | 'email' | 'created_at'>>;
+    email: string;
+  }): Promise<void> {
+    const user = this.users.find((model) => model.email === email);
+
+    if (!user) {
+      return;
+    }
+
+    const updatedUser = {
+      ...user,
+      ...update,
+    };
+
+    this.users.splice(this.users.indexOf(user), 1, updatedUser);
+
+    this.logger.debug('User updated:', updatedUser);
   }
 }
