@@ -4,4 +4,6 @@ export type User = {
   email: string;
   password: string;
   password_salt: string;
+  created_at?: string;
+  updated_at?: string;
 };

@@ -7,7 +7,16 @@ import { AuthHelper } from './helpers';
 import { EnsureAuthenticatedMiddleware, ErrorHandlingMiddleware, RequestAuditMiddleware } from './middlewares';
 import { EmailTemplateRepository, SessionRepository, UserRepository, VerificationCodeRepository } from './repositories';
 import { AppRouter, AuthRouter, PasswordRouter, RegistrationRouter } from './routers';
-import { LoginService, LogoutService, RefreshLoginService, RegistrationConfirmService, RegistrationService } from './services';
+import {
+  LoginService,
+  LogoutService,
+  RecoveryPasswordService,
+  RecoveryPasswordVerifyService,
+  RefreshLoginService,
+  RegistrationConfirmService,
+  RegistrationService,
+  ResetPasswordService,
+} from './services';
 
 // Adapters
 container.registerSingleton<UniqueIdAdapter>('UniqueIdAdapter', UniqueIdAdapter);
@@ -30,13 +39,16 @@ container.registerSingleton<RequestAuditMiddleware>('RequestAuditMiddleware', Re
 // Repositories
 container.registerSingleton<VerificationCodeRepository>('VerificationCodeRepository', VerificationCodeRepository);
 container.registerSingleton<EmailTemplateRepository>('EmailTemplateRepository', EmailTemplateRepository);
-container.registerSingleton<RefreshLoginService>('RefreshLoginService', RefreshLoginService);
 container.registerSingleton<SessionRepository>('SessionRepository', SessionRepository);
 container.registerSingleton<UserRepository>('UserRepository', UserRepository);
 
 // Services
+container.registerSingleton<RecoveryPasswordVerifyService>('RecoveryPasswordVerifyService', RecoveryPasswordVerifyService);
 container.registerSingleton<RegistrationConfirmService>('RegistrationConfirmService', RegistrationConfirmService);
+container.registerSingleton<RecoveryPasswordService>('RecoveryPasswordService', RecoveryPasswordService);
+container.registerSingleton<ResetPasswordService>('ResetPasswordService', ResetPasswordService);
 container.registerSingleton<RegistrationService>('RegistrationService', RegistrationService);
+container.registerSingleton<RefreshLoginService>('RefreshLoginService', RefreshLoginService);
 container.registerSingleton<LogoutService>('LogoutService', LogoutService);
 container.registerSingleton<LoginService>('LoginService', LoginService);
 

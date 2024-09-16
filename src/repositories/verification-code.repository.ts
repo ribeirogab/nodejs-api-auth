@@ -10,7 +10,7 @@ import type {
 /** DynamoDB structure
  - PK: verification-code
  - SK: code:{code}::type:{type}
- - Content: { code, type, content, expires_at }
+ - Content: { code, type, expires_at, ...content }
  - TTL: INT
  */
 
@@ -24,7 +24,9 @@ export class VerificationCodeRepository
     this.logger.setPrefix(this.logger, VerificationCodeRepository.name);
   }
 
-  public async create(dto: Omit<VerificationCode, 'code'>): Promise<void> {
+  public async create(
+    dto: Omit<VerificationCode, 'code'>,
+  ): Promise<VerificationCode> {
     const code = this.generateCode(6);
 
     const verificationCode = { ...dto, code };
@@ -32,6 +34,8 @@ export class VerificationCodeRepository
     this.codes.push(verificationCode);
 
     this.logger.debug('Verification code created:', verificationCode);
+
+    return verificationCode;
   }
 
   public async findOne({

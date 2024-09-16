@@ -9,7 +9,7 @@ export type VerificationCodeRepositoryFilterDto = {
 };
 
 export interface VerificationCodeRepository {
-  create(dto: Omit<VerificationCode, 'code'>): Promise<void>;
+  create(dto: Omit<VerificationCode, 'code'>): Promise<VerificationCode>;
 
   findOne(
     dto: VerificationCodeRepositoryFilterDto,
@@ -19,5 +19,6 @@ export interface VerificationCodeRepository {
 
   findOneByContent(dto: {
     content: { key: string; value: string };
+    type: VerificationCodeTypeEnum;
   }): Promise<VerificationCode | null>;
 }

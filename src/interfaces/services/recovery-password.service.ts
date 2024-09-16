@@ -1,6 +1,5 @@
 export type RecoveryPasswordServiceDto = {
-  password: string;
-  token: string;
+  email: string;
 };
 
 export interface RecoveryPasswordService {

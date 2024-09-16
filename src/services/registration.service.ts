@@ -43,6 +43,7 @@ export class RegistrationService implements RegistrationServiceInterface {
 
     const verificationCodeExists =
       await this.verificationCodeRepository.findOneByContent({
+        type: VerificationCodeTypeEnum.Registration,
         content: { key: 'email', value: email },
       });
 
