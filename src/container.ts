@@ -1,7 +1,7 @@
 import { container } from 'tsyringe';
 
 import { EmailAdapter, HashAdapter, LoggerAdapter, UniqueIdAdapter } from './adapters';
-import { EnvConfig, JwtConfig } from './configs';
+import { DynamoConfig, EnvConfig, JwtConfig, RateLimit } from './configs';
 import { AuthController, PasswordController, RegistrationController } from './controllers';
 import { AuthHelper } from './helpers';
 import { EnsureAuthenticatedMiddleware, ErrorHandlingMiddleware, RequestAuditMiddleware } from './middlewares';
@@ -25,8 +25,10 @@ container.registerSingleton<EmailAdapter>('EmailAdapter', EmailAdapter);
 container.registerSingleton<HashAdapter>('HashAdapter', HashAdapter);
 
 // Configs
+container.registerSingleton<DynamoConfig>('DynamoConfig', DynamoConfig);
 container.registerSingleton<EnvConfig>('EnvConfig', EnvConfig);
 container.registerSingleton<JwtConfig>('JwtConfig', JwtConfig);
+container.registerSingleton<RateLimit>('RateLimit', RateLimit);
 
 // Helpers
 container.registerSingleton<AuthHelper>('AuthHelper', AuthHelper);

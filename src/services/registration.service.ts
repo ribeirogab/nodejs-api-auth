@@ -60,7 +60,7 @@ export class RegistrationService implements RegistrationServiceInterface {
       salt,
     });
 
-    const content: Omit<User, 'id'> = {
+    const data: Omit<User, 'id'> = {
       password: hashedPassword,
       password_salt: salt,
       email,
@@ -75,7 +75,7 @@ export class RegistrationService implements RegistrationServiceInterface {
     await this.verificationCodeRepository.create({
       type: VerificationCodeTypeEnum.Registration,
       expires_at: expiresAt,
-      content,
+      data,
     });
   }
 }

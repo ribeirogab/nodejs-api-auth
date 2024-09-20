@@ -4,7 +4,7 @@ export enum VerificationCodeTypeEnum {
 }
 
 export type VerificationCode = {
-  content: Record<string, string | number>;
+  data: Record<string, string | number>;
   type: VerificationCodeTypeEnum;
   expires_at: string;
   code: string;

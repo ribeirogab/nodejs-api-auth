@@ -60,4 +60,12 @@ export class EnvConfig {
   public readonly RATE_LIMIT_TIME_WINDOW_MS = get('RATE_LIMIT_TIME_WINDOW_MS')
     .default(1000 * 60) // 1 minute
     .asIntPositive();
+
+  public readonly AWS_REGION = get('AWS_REGION')
+    .default('us-east-1')
+    .asString();
+
+  public readonly AWS_DYNAMO_TABLE_NAME = get('AWS_DYNAMO_TABLE_NAME')
+    .required()
+    .asString();
 }

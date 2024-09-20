@@ -8,6 +8,11 @@ export type VerificationCodeRepositoryFilterDto = {
   code: string;
 };
 
+export type VerificationCodeRepositoryFindOneByContentDto = {
+  content: { key: string; value: string };
+  type: VerificationCodeTypeEnum;
+};
+
 export interface VerificationCodeRepository {
   create(dto: Omit<VerificationCode, 'code'>): Promise<VerificationCode>;
 
@@ -17,8 +22,7 @@ export interface VerificationCodeRepository {
 
   deleteOne(dto: VerificationCodeRepositoryFilterDto): Promise<void>;
 
-  findOneByContent(dto: {
-    content: { key: string; value: string };
-    type: VerificationCodeTypeEnum;
-  }): Promise<VerificationCode | null>;
+  findOneByContent(
+    dto: VerificationCodeRepositoryFindOneByContentDto,
+  ): Promise<VerificationCode | null>;
 }
