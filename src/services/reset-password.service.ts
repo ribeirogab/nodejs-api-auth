@@ -7,6 +7,7 @@ import {
   type ResetPasswordServiceDto,
   type ResetPasswordService as ResetPasswordServiceInterface,
   type UserRepository,
+  type VerificationCode,
   type VerificationCodeRepository,
   VerificationCodeTypeEnum,
 } from '@/interfaces';
@@ -30,11 +31,14 @@ export class ResetPasswordService implements ResetPasswordServiceInterface {
     code,
   }: ResetPasswordServiceDto): Promise<void> {
     const verificationCode = await this.verificationCodeRepository.findOne({
-      type: VerificationCodeTypeEnum.RecoveryPassword,
+      code_type: VerificationCodeTypeEnum.RecoveryPassword,
       code,
     });
 
-    if (!verificationCode || verificationCode.content.email !== email) {
+    if (
+      !verificationCode ||
+      this.parseVerificationCode(verificationCode).email !== email
+    ) {
       throw new AppError({
         status_code: HttpStatusCodesEnum.UNAUTHORIZED,
         message: 'Unauthorized',
@@ -54,5 +58,21 @@ export class ResetPasswordService implements ResetPasswordServiceInterface {
         password_salt: salt,
       },
     });
+
+    await this.verificationCodeRepository.deleteOne({
+      code_type: verificationCode.code_type,
+      code: verificationCode.code,
+    });
+  }
+
+  private parseVerificationCode(verificationCode: VerificationCode) {
+    const data = this.verificationCodeRepository.removeReservedFields<{
+      email: string;
+    }>(verificationCode);
+
+    // To do: Validate the email
+    const email = data.email || null;
+
+    return { email };
   }
 }

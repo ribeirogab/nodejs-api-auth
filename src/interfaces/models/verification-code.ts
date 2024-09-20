@@ -3,9 +3,14 @@ export enum VerificationCodeTypeEnum {
   Registration = 'registration',
 }
 
+export enum VerificationCodeReservedFieldEnum {
+  code_expires_at = 'code_expires_at',
+  code_type = 'code_type',
+  code = 'code',
+}
+
 export type VerificationCode = {
-  data: Record<string, string | number>;
-  type: VerificationCodeTypeEnum;
-  expires_at: string;
+  code_type: VerificationCodeTypeEnum;
+  code_expires_at: string;
   code: string;
 };

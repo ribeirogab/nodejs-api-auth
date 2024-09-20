@@ -7,6 +7,7 @@ import {
   type RegistrationConfirmService as RegistrationConfirmServiceInterface,
   type User,
   type UserRepository,
+  type VerificationCode,
   type VerificationCodeRepository,
   VerificationCodeTypeEnum,
 } from '@/interfaces';
@@ -25,7 +26,7 @@ export class RegistrationConfirmService
 
   public async execute({ code }: RegistrationConfirmServiceDto): Promise<void> {
     const verificationCode = await this.verificationCodeRepository.findOne({
-      type: VerificationCodeTypeEnum.Registration,
+      code_type: VerificationCodeTypeEnum.Registration,
       code,
     });
 
@@ -36,7 +37,7 @@ export class RegistrationConfirmService
       });
     }
 
-    const user = this.parseUser(verificationCode.content);
+    const user = this.parseUser(verificationCode);
 
     const userExists = await this.userRepository.findByEmail({
       email: user.email,
@@ -52,10 +53,14 @@ export class RegistrationConfirmService
     await this.userRepository.create(user);
   }
 
-  private parseUser(
-    content: Record<string, string | number>,
-  ): Omit<User, 'id'> {
-    const user = content as Omit<User, 'id'>;
+  private parseUser(verificationCode: VerificationCode): Omit<User, 'id'> {
+    const userData =
+      this.verificationCodeRepository.removeReservedFields<Omit<User, 'id'>>(
+        verificationCode,
+      );
+
+    // To do: Validate the user data
+    const user = userData as Omit<User, 'id'>;
 
     return user;
   }

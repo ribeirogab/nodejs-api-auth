@@ -43,13 +43,13 @@ export class RegistrationService implements RegistrationServiceInterface {
 
     const verificationCodeExists =
       await this.verificationCodeRepository.findOneByContent({
-        type: VerificationCodeTypeEnum.Registration,
+        code_type: VerificationCodeTypeEnum.Registration,
         content: { key: 'email', value: email },
       });
 
     if (verificationCodeExists) {
       await this.verificationCodeRepository.deleteOne({
-        type: VerificationCodeTypeEnum.Registration,
+        code_type: VerificationCodeTypeEnum.Registration,
         code: verificationCodeExists.code,
       });
     }
@@ -60,7 +60,7 @@ export class RegistrationService implements RegistrationServiceInterface {
       salt,
     });
 
-    const data: Omit<User, 'id'> = {
+    const content: Omit<User, 'id'> = {
       password: hashedPassword,
       password_salt: salt,
       email,
@@ -73,9 +73,9 @@ export class RegistrationService implements RegistrationServiceInterface {
     ).toISOString();
 
     await this.verificationCodeRepository.create({
-      type: VerificationCodeTypeEnum.Registration,
-      expires_at: expiresAt,
-      data,
+      code_type: VerificationCodeTypeEnum.Registration,
+      code_expires_at: expiresAt,
+      content,
     });
   }
 }

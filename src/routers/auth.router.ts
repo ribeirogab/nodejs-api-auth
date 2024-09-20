@@ -31,10 +31,20 @@ export class AuthRouter implements Router {
           ),
         ],
       },
-      this.authController.login.bind(this.authController),
+      this.authController.refreshLogin.bind(this.authController),
     );
 
-    app.delete('/logout', this.authController.logout.bind(this.authController));
+    app.post(
+      '/logout',
+      {
+        preHandler: [
+          this.ensureAuthenticatedMiddleware.middleware.bind(
+            this.ensureAuthenticatedMiddleware,
+          ),
+        ],
+      },
+      this.authController.logout.bind(this.authController),
+    );
 
     if (done) {
       done();

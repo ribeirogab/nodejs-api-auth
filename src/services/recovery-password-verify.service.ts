@@ -22,7 +22,7 @@ export class RecoveryPasswordVerifyService
     code,
   }: RecoveryPasswordVerifyServiceDto): Promise<void> {
     const verificationCode = await this.verificationCodeRepository.findOne({
-      type: VerificationCodeTypeEnum.RecoveryPassword,
+      code_type: VerificationCodeTypeEnum.RecoveryPassword,
       code,
     });
 

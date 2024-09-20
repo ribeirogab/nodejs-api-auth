@@ -4,17 +4,24 @@ import type {
 } from '../models/verification-code';
 
 export type VerificationCodeRepositoryFilterDto = {
-  type: VerificationCodeTypeEnum;
+  code_type: VerificationCodeTypeEnum;
   code: string;
+};
+
+export type VerificationCodeRepositoryCreateDto = Omit<
+  VerificationCode,
+  'code'
+> & {
+  content: Record<string, string | number>;
 };
 
 export type VerificationCodeRepositoryFindOneByContentDto = {
   content: { key: string; value: string };
-  type: VerificationCodeTypeEnum;
+  code_type: VerificationCodeTypeEnum;
 };
 
 export interface VerificationCodeRepository {
-  create(dto: Omit<VerificationCode, 'code'>): Promise<VerificationCode>;
+  create(dto: VerificationCodeRepositoryCreateDto): Promise<VerificationCode>;
 
   findOne(
     dto: VerificationCodeRepositoryFilterDto,
@@ -25,4 +32,6 @@ export interface VerificationCodeRepository {
   findOneByContent(
     dto: VerificationCodeRepositoryFindOneByContentDto,
   ): Promise<VerificationCode | null>;
+
+  removeReservedFields<T>(dto: VerificationCode): T;
 }

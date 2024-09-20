@@ -5,6 +5,7 @@ import { HttpStatusCodesEnum } from '@/constants';
 import { AppError } from '@/errors';
 import type {
   AuthHelper,
+  LoggerAdapter,
   RefreshLoginServiceDto,
   RefreshLoginService as RefreshLoginServiceInterface,
   Session,
@@ -22,22 +23,18 @@ export class RefreshLoginService implements RefreshLoginServiceInterface {
 
     @inject('AuthHelper')
     private readonly authHelper: AuthHelper,
+
+    @inject('LoggerAdapter')
+    private readonly logger: LoggerAdapter,
   ) {}
 
   public async execute({
     refresh_token: refreshToken,
   }: RefreshLoginServiceDto): Promise<Omit<Session, 'user_id'>> {
-    const decodedToken = this.jwtConfig.verify<{ sub?: string }>(refreshToken);
-
-    if (!decodedToken?.sub) {
-      throw new AppError({
-        status_code: HttpStatusCodesEnum.UNAUTHORIZED,
-        message: 'Unauthorized',
-      });
-    }
+    const userId = this.getUserId({ refreshToken });
 
     const session = await this.sessionRepository.findByUserId({
-      user_id: decodedToken.sub,
+      user_id: userId,
     });
 
     if (
@@ -56,5 +53,29 @@ export class RefreshLoginService implements RefreshLoginServiceInterface {
     });
 
     return refreshedSession;
+  }
+
+  private getUserId({ refreshToken }: { refreshToken: string }): string {
+    try {
+      const decodedToken = this.jwtConfig.verify<{ sub?: string }>(
+        refreshToken,
+      );
+
+      if (!decodedToken?.sub) {
+        throw new AppError({
+          status_code: HttpStatusCodesEnum.UNAUTHORIZED,
+          message: 'Unauthorized',
+        });
+      }
+
+      return decodedToken.sub;
+    } catch (error) {
+      this.logger.error('Error while verifying token', error);
+
+      throw new AppError({
+        status_code: HttpStatusCodesEnum.UNAUTHORIZED,
+        message: 'Unauthorized',
+      });
+    }
   }
 }

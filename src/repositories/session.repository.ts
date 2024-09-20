@@ -1,5 +1,15 @@
-import { injectable } from 'tsyringe';
+import {
+  DeleteItemCommand,
+  type DeleteItemCommandInput,
+  GetItemCommand,
+  type GetItemCommandInput,
+  PutItemCommand,
+  type PutItemCommandInput,
+} from '@aws-sdk/client-dynamodb';
+import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
+import { inject, injectable } from 'tsyringe';
 
+import type { DynamoConfig } from '@/configs';
 import type {
   Session,
   SessionRepository as SessionRepositoryInterface,
@@ -14,38 +24,68 @@ import type {
 
 @injectable()
 export class SessionRepository implements SessionRepositoryInterface {
-  private sessions: Session[] = [];
+  private readonly PK = 'session';
 
-  async upsert(session: Session): Promise<Session> {
-    const index = this.sessions.findIndex(
-      (userSession) => userSession.user_id === session.user_id,
-    );
+  constructor(
+    @inject('DynamoConfig') private readonly dynamoConfig: DynamoConfig,
+  ) {}
 
-    if (index !== -1) {
-      // Update an existing session
-      this.sessions[index] = session;
-    } else {
-      this.sessions.push(session);
-    }
+  public async upsert(session: Session): Promise<Session> {
+    const params: PutItemCommandInput = {
+      TableName: this.dynamoConfig.tableName,
+      Item: marshall({
+        PK: this.PK,
+        SK: `user_id:${session.user_id}`,
+        Content: {
+          access_token: session.access_token,
+          refresh_token: session.refresh_token,
+          expires_at: session.expires_at,
+          user_id: session.user_id,
+        },
+        TTL: this.dynamoConfig.getTTL(new Date(session.expires_at)),
+      }),
+    };
+
+    await this.dynamoConfig.client.send(new PutItemCommand(params));
 
     return session;
   }
 
-  async deleteByUserId({ user_id }: { user_id: string }): Promise<void> {
-    this.sessions = this.sessions.filter(
-      (session) => session.user_id !== user_id,
-    );
+  public async deleteByUserId({ user_id }: { user_id: string }): Promise<void> {
+    const params: DeleteItemCommandInput = {
+      TableName: this.dynamoConfig.tableName,
+      Key: marshall({
+        PK: this.PK,
+        SK: `user_id:${user_id}`,
+      }),
+    };
+
+    await this.dynamoConfig.client.send(new DeleteItemCommand(params));
   }
 
-  async findByUserId({
+  public async findByUserId({
     user_id,
   }: {
     user_id: string;
   }): Promise<Session | null> {
-    const session = this.sessions.find(
-      (userSession) => userSession.user_id === user_id,
+    const params: GetItemCommandInput = {
+      TableName: this.dynamoConfig.tableName,
+      Key: marshall({
+        PK: this.PK,
+        SK: `user_id:${user_id}`,
+      }),
+    };
+
+    const { Item } = await this.dynamoConfig.client.send(
+      new GetItemCommand(params),
     );
 
-    return session || null;
+    if (!Item) {
+      return null;
+    }
+
+    const session = unmarshall(Item).Content as Session;
+
+    return session;
   }
 }

@@ -33,14 +33,14 @@ export class RecoveryPasswordService
 
     const verificationCodeExists =
       await this.verificationCodeRepository.findOneByContent({
-        type: VerificationCodeTypeEnum.RecoveryPassword,
+        code_type: VerificationCodeTypeEnum.RecoveryPassword,
         content: { key: 'email', value: email },
       });
 
     if (verificationCodeExists) {
       await this.verificationCodeRepository.deleteOne({
         code: verificationCodeExists.code,
-        type: VerificationCodeTypeEnum.RecoveryPassword,
+        code_type: VerificationCodeTypeEnum.RecoveryPassword,
       });
     }
 
@@ -50,8 +50,8 @@ export class RecoveryPasswordService
     ).toISOString();
 
     const verificationCode = await this.verificationCodeRepository.create({
-      type: VerificationCodeTypeEnum.RecoveryPassword,
-      expires_at: expiresAt,
+      code_type: VerificationCodeTypeEnum.RecoveryPassword,
+      code_expires_at: expiresAt,
       content: { email },
     });
 

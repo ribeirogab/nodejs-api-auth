@@ -12,18 +12,20 @@ import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { inject, injectable } from 'tsyringe';
 
 import { type DynamoConfig, DynamoPartitionKeysEnum } from '@/configs';
-import type {
-  LoggerAdapter,
-  VerificationCode,
-  VerificationCodeRepositoryFilterDto,
-  VerificationCodeRepositoryFindOneByContentDto,
-  VerificationCodeRepository as VerificationCodeRepositoryInterface,
+import {
+  type LoggerAdapter,
+  type VerificationCode,
+  type VerificationCodeRepositoryCreateDto,
+  type VerificationCodeRepositoryFilterDto,
+  type VerificationCodeRepositoryFindOneByContentDto,
+  type VerificationCodeRepository as VerificationCodeRepositoryInterface,
+  VerificationCodeReservedFieldEnum,
 } from '@/interfaces';
 
 /** DynamoDB structure
  - PK: verification-code
  - SK: type:{type}::code:{code}
- - Content: { code, type, expires_at, data }
+ - Content: { code, type, expires_at, ...data }
  - TTL: INT
  */
 
@@ -35,30 +37,31 @@ export class VerificationCodeRepository
 
   constructor(
     @inject('DynamoConfig') private readonly dynamoConfig: DynamoConfig,
+
     @inject('LoggerAdapter') private readonly logger: LoggerAdapter,
   ) {
     this.logger.setPrefix(this.logger, VerificationCodeRepository.name);
   }
 
   public async create(
-    dto: Omit<VerificationCode, 'code'>,
+    dto: VerificationCodeRepositoryCreateDto,
   ): Promise<VerificationCode> {
     try {
       const code = this.generateCode(6);
-      const verificationCode = { ...dto, code };
+      const verificationCode = {
+        ...dto.content,
+        code_expires_at: dto.code_expires_at,
+        code_type: dto.code_type,
+        code,
+      };
 
       const params: PutItemInput = {
         TableName: this.dynamoConfig.tableName,
         Item: marshall({
           PK: this.PK,
-          SK: `type:${dto.type}::code:${code}`,
-          TTL: this.dynamoConfig.getTTL(new Date(dto.expires_at)),
-          Content: {
-            ...verificationCode.data,
-            expires_at: verificationCode.expires_at,
-            code: verificationCode.code,
-            type: verificationCode.type,
-          },
+          SK: `type:${dto.code_type}::code:${code}`,
+          TTL: this.dynamoConfig.getTTL(new Date(dto.code_expires_at)),
+          Content: verificationCode,
         }),
       };
 
@@ -75,15 +78,15 @@ export class VerificationCodeRepository
   }
 
   public async findOne({
+    code_type,
     code,
-    type,
   }: VerificationCodeRepositoryFilterDto): Promise<VerificationCode | null> {
     try {
       const params: GetItemInput = {
         TableName: this.dynamoConfig.tableName,
         Key: marshall({
           PK: this.PK,
-          SK: `type:${type}::code:${code}`,
+          SK: `type:${code_type}::code:${code}`,
         }),
       };
 
@@ -95,11 +98,13 @@ export class VerificationCodeRepository
         return null;
       }
 
-      const verificationCode = unmarshall(Item) as VerificationCode;
+      const verificationCode = unmarshall(Item) as {
+        Content: VerificationCode;
+      };
 
       this.logger.debug('Verification code retrieved:', verificationCode);
 
-      return verificationCode;
+      return verificationCode.Content;
     } catch (error) {
       this.logger.error('Error retrieving verification code:', error);
 
@@ -109,7 +114,7 @@ export class VerificationCodeRepository
 
   public async findOneByContent({
     content,
-    type,
+    code_type,
   }: VerificationCodeRepositoryFindOneByContentDto): Promise<VerificationCode | null> {
     try {
       const params: QueryCommandInput = {
@@ -119,7 +124,7 @@ export class VerificationCodeRepository
         ExpressionAttributeValues: marshall({
           ':pk': this.PK,
           ':value': content.value,
-          ':type': `type:${type}`,
+          ':type': `type:${code_type}`,
         }),
         ExpressionAttributeNames: {
           '#key': content.key,
@@ -155,28 +160,41 @@ export class VerificationCodeRepository
   }
 
   public async deleteOne({
+    code_type,
     code,
-    type,
   }: VerificationCodeRepositoryFilterDto): Promise<void> {
     try {
       const params: DeleteItemCommandInput = {
         TableName: this.dynamoConfig.tableName,
         Key: marshall({
           PK: this.PK,
-          SK: `type:${type}::code:${code}`,
+          SK: `type:${code_type}::code:${code}`,
         }),
       };
 
       await this.dynamoConfig.client.send(new DeleteItemCommand(params));
 
       this.logger.debug(
-        `Verification code with code ${code} and type ${type} deleted`,
+        `Verification code with code ${code} and type ${code_type} deleted`,
       );
     } catch (error) {
       this.logger.error('Error deleting verification code:', error);
 
       throw error;
     }
+  }
+
+  public removeReservedFields<T>(verificationCode: VerificationCode) {
+    const data = Object.fromEntries(
+      Object.entries(verificationCode).filter(
+        ([key]) =>
+          !(
+            Object.values(VerificationCodeReservedFieldEnum) as string[]
+          ).includes(key),
+      ),
+    );
+
+    return data as T;
   }
 
   private generateCode(length: number): string {

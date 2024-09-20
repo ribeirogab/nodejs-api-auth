@@ -19,9 +19,21 @@ resource "aws_dynamodb_table" "auth_resource_table" {
     type = "S"
   }
 
+  attribute {
+    name = "ReferenceId"
+    type = "S"
+  }
+
   ttl {
     attribute_name = "TTL"
     enabled        = true
+  }
+
+  global_secondary_index {
+    name            = "ReferenceIdIndex"
+    hash_key        = "PK"
+    range_key       = "ReferenceId"
+    projection_type = "ALL"
   }
 
   tags = {
