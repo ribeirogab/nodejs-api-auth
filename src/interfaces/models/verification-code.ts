@@ -1,5 +1,4 @@
 export enum VerificationCodeTypeEnum {
-  RecoveryPassword = 'recovery-password',
   Registration = 'registration',
   Login = 'login',
 }

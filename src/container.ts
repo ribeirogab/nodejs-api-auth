@@ -1,18 +1,16 @@
 import { container } from 'tsyringe';
 
-import { EmailAdapter, HashAdapter, LoggerAdapter, UniqueIdAdapter } from './adapters';
+import { EmailAdapter, LoggerAdapter, UniqueIdAdapter } from './adapters';
 import { DynamoConfig, EnvConfig, JwtConfig, RateLimit } from './configs';
-import { AuthController, PasswordController, RegistrationController } from './controllers';
+import { AuthController, RegistrationController } from './controllers';
 import { AuthHelper } from './helpers';
 import { EnsureAuthenticatedMiddleware, ErrorHandlingMiddleware, RequestAuditMiddleware } from './middlewares';
 import { EmailTemplateRepository, SessionRepository, UserRepository, VerificationCodeRepository } from './repositories';
-import { AppRouter, AuthRouter, PasswordRouter, RegistrationRouter } from './routers';
+import { AppRouter, AuthRouter, RegistrationRouter } from './routers';
 import {
   LoginConfirmService,
   LoginService,
   LogoutService,
-  RecoveryPasswordService,
-  RecoveryPasswordVerifyService,
   RefreshLoginService,
   RegistrationConfirmService,
   RegistrationService,
@@ -23,7 +21,6 @@ import {
 container.registerSingleton<UniqueIdAdapter>('UniqueIdAdapter', UniqueIdAdapter);
 container.registerSingleton<LoggerAdapter>('LoggerAdapter', LoggerAdapter);
 container.registerSingleton<EmailAdapter>('EmailAdapter', EmailAdapter);
-container.registerSingleton<HashAdapter>('HashAdapter', HashAdapter);
 
 // Configs
 container.registerSingleton<DynamoConfig>('DynamoConfig', DynamoConfig);
@@ -46,9 +43,7 @@ container.registerSingleton<SessionRepository>('SessionRepository', SessionRepos
 container.registerSingleton<UserRepository>('UserRepository', UserRepository);
 
 // Services
-container.registerSingleton<RecoveryPasswordVerifyService>('RecoveryPasswordVerifyService', RecoveryPasswordVerifyService);
 container.registerSingleton<RegistrationConfirmService>('RegistrationConfirmService', RegistrationConfirmService);
-container.registerSingleton<RecoveryPasswordService>('RecoveryPasswordService', RecoveryPasswordService);
 container.registerSingleton<ResetPasswordService>('ResetPasswordService', ResetPasswordService);
 container.registerSingleton<RegistrationService>('RegistrationService', RegistrationService);
 container.registerSingleton<RefreshLoginService>('RefreshLoginService', RefreshLoginService);
@@ -58,11 +53,9 @@ container.registerSingleton<LoginService>('LoginService', LoginService);
 
 // Controllers
 container.registerSingleton<RegistrationController>('RegistrationController', RegistrationController);
-container.registerSingleton<PasswordController>('PasswordController', PasswordController);
 container.registerSingleton<AuthController>('AuthController', AuthController);
 
 // Routers
 container.registerSingleton<RegistrationRouter>('RegistrationRouter', RegistrationRouter);
-container.registerSingleton<PasswordRouter>('PasswordRouter', PasswordRouter);
 container.registerSingleton<AuthRouter>('AuthRouter', AuthRouter);
 container.registerSingleton<AppRouter>('AppRouter', AppRouter);

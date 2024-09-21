@@ -40,13 +40,13 @@ export class LoginService implements LoginServiceInterface {
 
     const verificationCodeExists =
       await this.verificationCodeRepository.findOneByContent({
-        code_type: VerificationCodeTypeEnum.Registration,
+        code_type: VerificationCodeTypeEnum.Login,
         content: { key: 'email', value: email },
       });
 
     if (verificationCodeExists) {
       await this.verificationCodeRepository.deleteOne({
-        code_type: VerificationCodeTypeEnum.Registration,
+        code_type: VerificationCodeTypeEnum.Login,
         token: verificationCodeExists.token,
       });
     }
