@@ -30,6 +30,12 @@ export class EnvConfig {
     .default(EmailProviderEnum.Resend)
     .asEnum(Object.values(EmailProviderEnum));
 
+  public readonly DEFAULT_SENDER_EMAIL = get('DEFAULT_SENDER_EMAIL').required().asString();
+
+  public readonly RESEND_API_KEY = get('RESEND_API_KEY')
+    .required(this.EMAIL_PROVIDER === EmailProviderEnum.Resend)
+    .asString();
+
   public readonly UNIQUE_ID_PROVIDER = get('UNIQUE_ID_PROVIDER')
     .default(UniqueIdProviderEnum.Uuid)
     .asEnum(Object.values(UniqueIdProviderEnum));

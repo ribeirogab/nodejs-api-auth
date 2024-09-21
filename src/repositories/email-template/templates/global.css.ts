@@ -1,48 +1,47 @@
-export const globalCss = `
-  .body {
+export const classNames: Record<string, string> = {
+  body: `
     font-family: Arial, sans-serif;
     background-color: #f4f4f7;
     margin: 0;
     padding: 0;
     line-height: 1.6;
     color: #333333;
-  }
+  `,
 
-  .container {
+  container: `
     max-width: 600px;
     margin: 0 auto;
     background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
+  `,
 
-  .header {
+  header: `
     text-align: center;
     padding: 20px 0;
-  }
+  `,
 
-  .header img {
+  'header-img': `
     height: 40px;
-  }
+  `,
 
-  .content {
+  content: `
     padding: 20px 30px;
-  }
+  `,
 
-  .content h1 {
+  title: `
     font-size: 24px;
     color: #333333;
     text-align: center;
-  }
+  `,
 
-  .content p {
+  paragraph: `
     font-size: 16px;
     margin-bottom: 20px;
-    text-align: center;
-  }
+  `,
 
-  .code {
+  code: `
     display: block;
     font-size: 20px;
     font-weight: bold;
@@ -52,22 +51,19 @@ export const globalCss = `
     border-radius: 8px;
     margin: 20px 0;
     letter-spacing: 4px;
-  }
+  `,
 
-  .link {
+  link: `
     margin: 20px 0;
-  }
-
-  .link a {
     color: #007bff;
     text-decoration: none;
     border-radius: 5px;
-  }
+  `,
 
-  .footer {
+  footer: `
     text-align: center;
-    padding: 20px 0;
+    padding: 20px 30px;
     font-size: 12px;
     color: #777777;
-  }
-`;
+  `,
+};

@@ -16,18 +16,18 @@ export const pt: SignUpEmailTemplateLang = ({
       organization?.logoUrl
         ? `
       <div class="header">
-        <img src="${organization.logoUrl}" alt="Logo da Empresa" />
+        <img class="header-img" src="${organization.logoUrl}" alt="Logo da Empresa" />
       </div>`
         : ''
     }
     <div class="content">
-      <h1>Verifique seu e-mail para se cadastrar${organization?.name ? ` na <strong>${organization.name}</strong>` : ''}</h1>
-      <p>Recebemos uma tentativa de cadastro.</p>
-      <p>
+      <h1 class="title">Verifique seu e-mail para se cadastrar${organization?.name ? ` na <strong>${organization.name}</strong>` : ''}</h1>
+      <p class="paragraph">Recebemos uma tentativa de cadastro.</p>
+      <p class="paragraph">
         Para concluir o processo de cadastro, insira o código de ${code.length} dígitos na janela original:
       </p>
       <span class="code">${code}</span>
-      <p>
+      <p class="paragraph">
         Ou visite o link abaixo para abrir a página de confirmação em uma nova janela ou
         dispositivo:
       </p>

@@ -1,4 +1,4 @@
-import { globalCss } from '../global.css';
+import { DefaultTemplate } from '../default.template';
 import { EmailTemplate, type EmailTemplateGetTemplateDto } from '../types';
 import { en } from './en.template';
 import { pt } from './pt.template';
@@ -8,6 +8,7 @@ import {
 } from '@/interfaces';
 
 export class SignInEmailTemplate
+  extends DefaultTemplate
   implements EmailTemplate<EmailTemplateSignInVariables>
 {
   public readonly templatesByLang = {
@@ -28,11 +29,7 @@ export class SignInEmailTemplate
       organization,
     });
 
-    const htmlWithStyles = `
-    <styles>
-      ${globalCss}
-    </styles>
-    ${html}`;
+    const htmlWithStyles = this.addGlobalStyles(html);
 
     return { html: htmlWithStyles, subject };
   }

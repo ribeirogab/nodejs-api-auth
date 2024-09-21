@@ -16,19 +16,19 @@ export const en: SignUpEmailTemplateLang = ({
       organization?.logoUrl
         ? `
       <div class="header">
-        <img src="${organization.logoUrl}" alt="Company Logo" />
+        <img class="header-img" src="${organization.logoUrl}" alt="Company Logo" />
       </div>`
         : ''
     }
     <div class="content">
-      <h1>Verify your email to sign up${organization?.name ? ` for <strong>${organization.name}</strong>` : ''}</h1>
-      <p>We have received a sign-up attempt.</p>
-      <p>
+      <h1 class="title">Verify your email to sign up${organization?.name ? ` for <strong>${organization.name}</strong>` : ''}</h1>
+      <p class="paragraph">We have received a sign-up attempt.</p>
+      <p class="paragraph">
         To complete the sign-up process; enter the ${code.length}-digit code in the original
         window:
       </p>
       <span class="code">${code}</span>
-      <p>
+      <p class="paragraph">
         Or visit the link below to open the confirmation page in a new window or
         device:
       </p>
@@ -37,7 +37,7 @@ export const en: SignUpEmailTemplateLang = ({
       </div>
     </div>
     <div class="footer">
-      <p>If you didn't attempt to sign up but received this email, you can ignore this email. No account will be created.</p>
+      <p>If you did not request this, please ignore this email. No account will be created.</p>
       <p>Don't share or forward the 6-digit code with anyone. Our customer service will never ask for it. Do not read this code out loud.</p>
     </div>
   </div>

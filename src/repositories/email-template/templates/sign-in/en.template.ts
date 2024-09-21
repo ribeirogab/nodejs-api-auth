@@ -17,20 +17,20 @@ export const en: SignInEmailTemplateLang = ({
       organization?.logoUrl
         ? `
       <div class="header">
-        <img src="${organization.logoUrl}" alt="Company Logo" />
+        <img class="header-img" src="${organization.logoUrl}" alt="Company Logo" />
       </div>`
         : ''
     }
     <div class="content">
-      <h1>Verify your email to sign in${organization?.name ? ` to <strong>${organization.name}</strong>` : ''}</h1>
-      <p>Hello <strong>${username}</strong>,</p>
-      <p>We have received a sign-in attempt.</p>
-      <p>
+      <h1 class="title">Verify your email to sign in${organization?.name ? ` to <strong>${organization.name}</strong>` : ''}</h1>
+      <p class="paragraph">Hello <strong>${username}</strong>,</p>
+      <p class="paragraph">We have received a sign-in attempt.</p>
+      <p class="paragraph">
         To complete the sign-in process; enter the ${code.length}-digit code in the original
         window:
       </p>
       <span class="code">${code}</span>
-      <p>
+      <p class="paragraph">
         Or visit the link below to open the confirmation page in a new window or
         device:
       </p>
