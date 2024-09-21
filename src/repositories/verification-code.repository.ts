@@ -24,8 +24,8 @@ import {
 
 /** DynamoDB structure
  - PK: verification-code
- - SK: type:{type}::code:{code}
- - Content: { code, type, expires_at, ...data }
+ - SK: type:{type}::token:{token}
+ - Content: { code, type, expires_at, token, ...data }
  - TTL: INT
  */
 
@@ -52,6 +52,7 @@ export class VerificationCodeRepository
         ...dto.content,
         code_expires_at: dto.code_expires_at,
         code_type: dto.code_type,
+        token: dto.token,
         code,
       };
 
@@ -59,7 +60,7 @@ export class VerificationCodeRepository
         TableName: this.dynamoConfig.tableName,
         Item: marshall({
           PK: this.PK,
-          SK: `type:${dto.code_type}::code:${code}`,
+          SK: this.getSortKey(dto.code_type, dto.token),
           TTL: this.dynamoConfig.getTTL(new Date(dto.code_expires_at)),
           Content: verificationCode,
         }),
@@ -79,14 +80,14 @@ export class VerificationCodeRepository
 
   public async findOne({
     code_type,
-    code,
+    token,
   }: VerificationCodeRepositoryFilterDto): Promise<VerificationCode | null> {
     try {
       const params: GetItemInput = {
         TableName: this.dynamoConfig.tableName,
         Key: marshall({
           PK: this.PK,
-          SK: `type:${code_type}::code:${code}`,
+          SK: this.getSortKey(code_type, token),
         }),
       };
 
@@ -113,8 +114,8 @@ export class VerificationCodeRepository
   }
 
   public async findOneByContent({
-    content,
     code_type,
+    content,
   }: VerificationCodeRepositoryFindOneByContentDto): Promise<VerificationCode | null> {
     try {
       const params: QueryCommandInput = {
@@ -161,21 +162,21 @@ export class VerificationCodeRepository
 
   public async deleteOne({
     code_type,
-    code,
+    token,
   }: VerificationCodeRepositoryFilterDto): Promise<void> {
     try {
       const params: DeleteItemCommandInput = {
         TableName: this.dynamoConfig.tableName,
         Key: marshall({
           PK: this.PK,
-          SK: `type:${code_type}::code:${code}`,
+          SK: this.getSortKey(code_type, token),
         }),
       };
 
       await this.dynamoConfig.client.send(new DeleteItemCommand(params));
 
       this.logger.debug(
-        `Verification code with code ${code} and type ${code_type} deleted`,
+        `Verification code with token ${token} and type ${code_type} deleted`,
       );
     } catch (error) {
       this.logger.error('Error deleting verification code:', error);
@@ -202,5 +203,9 @@ export class VerificationCodeRepository
     const max = Math.pow(10, length) - 1;
 
     return Math.floor(min + Math.random() * (max - min + 1)).toString();
+  }
+
+  private getSortKey(codeType: string, token: string): string {
+    return `type:${codeType}::token:${token}`;
   }
 }

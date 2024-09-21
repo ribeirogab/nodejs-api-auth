@@ -34,9 +34,16 @@ export class EnsureAuthenticatedMiddleware implements HookMiddleware {
     const [, token] = authorization.split(' ');
 
     try {
-      const { sub } = this.jwtConfig.verify<{ sub: string }>(token);
+      const decoded = this.jwtConfig.verify<{ sub: string }>({ token });
 
-      request.user = { id: sub };
+      if (!decoded) {
+        throw new AppError({
+          status_code: HttpStatusCodesEnum.UNAUTHORIZED,
+          message: 'Unauthorized',
+        });
+      }
+
+      request.user = { id: decoded.sub };
     } catch (error) {
       this.logger.error('Error while verifying token', error);
 

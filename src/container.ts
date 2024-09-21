@@ -8,6 +8,7 @@ import { EnsureAuthenticatedMiddleware, ErrorHandlingMiddleware, RequestAuditMid
 import { EmailTemplateRepository, SessionRepository, UserRepository, VerificationCodeRepository } from './repositories';
 import { AppRouter, AuthRouter, PasswordRouter, RegistrationRouter } from './routers';
 import {
+  LoginConfirmService,
   LoginService,
   LogoutService,
   RecoveryPasswordService,
@@ -51,6 +52,7 @@ container.registerSingleton<RecoveryPasswordService>('RecoveryPasswordService', 
 container.registerSingleton<ResetPasswordService>('ResetPasswordService', ResetPasswordService);
 container.registerSingleton<RegistrationService>('RegistrationService', RegistrationService);
 container.registerSingleton<RefreshLoginService>('RefreshLoginService', RefreshLoginService);
+container.registerSingleton<LoginConfirmService>('LoginConfirmService', LoginConfirmService);
 container.registerSingleton<LogoutService>('LogoutService', LogoutService);
 container.registerSingleton<LoginService>('LoginService', LoginService);
 

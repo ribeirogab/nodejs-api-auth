@@ -20,23 +20,20 @@ export class RegistrationController {
   ) {}
 
   public async registration(request: FastifyRequest, reply: FastifyReply) {
-    const { email, name, password } = request.body as Omit<
-      User,
-      'id' | 'password_salt'
-    >;
+    const { email, name } = request.body as Omit<User, 'id'>;
 
-    await this.registrationService.execute({ email, name, password });
+    const response = await this.registrationService.execute({ email, name });
 
-    return reply.code(HttpStatusCodesEnum.NO_CONTENT).send();
+    return reply.code(HttpStatusCodesEnum.OK).send(response);
   }
 
   public async registrationConfirm(
     request: FastifyRequest,
     reply: FastifyReply,
   ) {
-    const { code } = request.body as RegistrationConfirmServiceDto;
+    const { code, token } = request.body as RegistrationConfirmServiceDto;
 
-    await this.registrationConfirmService.execute({ code });
+    await this.registrationConfirmService.execute({ code, token });
 
     return reply.code(HttpStatusCodesEnum.NO_CONTENT).send();
   }
