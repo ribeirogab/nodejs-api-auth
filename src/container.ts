@@ -14,7 +14,6 @@ import {
   RefreshLoginService,
   RegistrationConfirmService,
   RegistrationService,
-  ResetPasswordService,
 } from './services';
 
 // Adapters
@@ -44,7 +43,6 @@ container.registerSingleton<UserRepository>('UserRepository', UserRepository);
 
 // Services
 container.registerSingleton<RegistrationConfirmService>('RegistrationConfirmService', RegistrationConfirmService);
-container.registerSingleton<ResetPasswordService>('ResetPasswordService', ResetPasswordService);
 container.registerSingleton<RegistrationService>('RegistrationService', RegistrationService);
 container.registerSingleton<RefreshLoginService>('RefreshLoginService', RefreshLoginService);
 container.registerSingleton<LoginConfirmService>('LoginConfirmService', LoginConfirmService);
