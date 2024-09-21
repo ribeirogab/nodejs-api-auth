@@ -71,15 +71,15 @@ resource "aws_lambda_function" "nodejs_api_authentication_lambda" {
   ]
   environment {
     variables = {
-      NODE_ENV                     = "production"
-      STAGE                        = var.environment
-      JWT_SECRET                   = data.aws_ssm_parameter.jwt_secret.value
-      VERIFICATION_CODE_JWT_SECRET = data.aws_ssm_parameter.verification_code_jwt_secret.value
-      FRONTEND_CONFIRM_SIGN_UP_URL = var.frontend_confirm_sign_up_url
-      FRONTEND_CONFIRM_SIGN_IN_URL = var.frontend_confirm_sign_in_url
-      AWS_DYNAMO_TABLE_NAME        = aws_dynamodb_table.auth_resource_table.name
-      DEFAULT_SENDER_EMAIL         = data.aws_ssm_parameter.default_sender_email.value
-      RESEND_API_KEY               = data.aws_ssm_parameter.resend_api_key.value
+      NODE_ENV                      = "production"
+      STAGE                         = var.environment
+      JWT_SECRET                    = data.aws_ssm_parameter.jwt_secret.value
+      JWT_SECRET_VERIFICATION_TOKEN = data.aws_ssm_parameter.verification_code_jwt_secret.value
+      FRONTEND_CONFIRM_SIGN_UP_URL  = var.frontend_confirm_sign_up_url
+      FRONTEND_CONFIRM_SIGN_IN_URL  = var.frontend_confirm_sign_in_url
+      AWS_DYNAMO_TABLE_NAME         = aws_dynamodb_table.auth_resource_table.name
+      DEFAULT_SENDER_EMAIL          = data.aws_ssm_parameter.default_sender_email.value
+      RESEND_API_KEY                = data.aws_ssm_parameter.resend_api_key.value
     }
   }
   tags = {
