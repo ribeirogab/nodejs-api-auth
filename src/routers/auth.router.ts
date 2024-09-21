@@ -23,6 +23,11 @@ export class AuthRouter implements Router {
     app.post('/login', this.authController.login.bind(this.authController));
 
     app.post(
+      '/login/confirm',
+      this.authController.loginConfirm.bind(this.authController),
+    );
+
+    app.post(
       '/login/refresh',
       {
         preHandler: [

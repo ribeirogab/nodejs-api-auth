@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
-import type { HashAdapter } from '@/adapters';
+import type { EnvConfig, JwtConfig } from '@/configs';
 import { AppErrorCodeEnum, HttpStatusCodesEnum } from '@/constants';
 import { AppError } from '@/errors';
 import {
@@ -21,23 +21,26 @@ export class RegistrationService implements RegistrationServiceInterface {
     @inject('VerificationCodeRepository')
     private verificationCodeRepository: VerificationCodeRepository,
 
-    @inject('HashAdapter')
-    private hashAdapter: HashAdapter,
+    @inject('JwtConfig')
+    private readonly jwtConfig: JwtConfig,
+
+    @inject('EnvConfig')
+    private readonly envConfig: EnvConfig,
   ) {}
 
   public async execute({
-    password,
     email,
     name,
-  }: RegistrationServiceDto): Promise<void> {
+  }: RegistrationServiceDto): Promise<{ token: string }> {
     const userExists = await this.userRepository.findByEmail({
       email,
     });
 
     if (userExists) {
       throw new AppError({
-        message: AppErrorCodeEnum.EmailAlreadyInUse,
+        error_code: AppErrorCodeEnum.EmailAlreadyInUse,
         status_code: HttpStatusCodesEnum.CONFLICT,
+        message: 'This email is already in use.',
       });
     }
 
@@ -50,19 +53,11 @@ export class RegistrationService implements RegistrationServiceInterface {
     if (verificationCodeExists) {
       await this.verificationCodeRepository.deleteOne({
         code_type: VerificationCodeTypeEnum.Registration,
-        code: verificationCodeExists.code,
+        token: verificationCodeExists.token,
       });
     }
 
-    const salt = this.hashAdapter.generateSalt();
-    const hashedPassword = this.hashAdapter.hash({
-      text: password,
-      salt,
-    });
-
     const content: Omit<User, 'id'> = {
-      password: hashedPassword,
-      password_salt: salt,
       email,
       name,
     };
@@ -72,10 +67,19 @@ export class RegistrationService implements RegistrationServiceInterface {
       Date.now() + expirationTimeInMinutes * 60 * 1000,
     ).toISOString();
 
+    const token = this.jwtConfig.sign({
+      secret: this.envConfig.JWT_SECRET_VERIFICATION_TOKEN,
+      expiresIn: '1h',
+      subject: email,
+    });
+
     await this.verificationCodeRepository.create({
       code_type: VerificationCodeTypeEnum.Registration,
       code_expires_at: expiresAt,
       content,
+      token,
     });
+
+    return { token };
   }
 }
