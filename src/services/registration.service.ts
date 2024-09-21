@@ -4,6 +4,9 @@ import type { EnvConfig, JwtConfig } from '@/configs';
 import { AppErrorCodeEnum, HttpStatusCodesEnum } from '@/constants';
 import { AppError } from '@/errors';
 import {
+  type EmailAdapter,
+  EmailTemplateEnum,
+  type EmailTemplateRepository,
   type RegistrationServiceDto,
   type RegistrationService as RegistrationServiceInterface,
   type User,
@@ -15,11 +18,17 @@ import {
 @injectable()
 export class RegistrationService implements RegistrationServiceInterface {
   constructor(
-    @inject('UserRepository')
-    private readonly userRepository: UserRepository,
+    @inject('EmailTemplateRepository')
+    private readonly emailTemplateRepository: EmailTemplateRepository,
 
     @inject('VerificationCodeRepository')
     private verificationCodeRepository: VerificationCodeRepository,
+
+    @inject('UserRepository')
+    private readonly userRepository: UserRepository,
+
+    @inject('EmailAdapter')
+    private readonly emailAdapter: EmailAdapter,
 
     @inject('JwtConfig')
     private readonly jwtConfig: JwtConfig,
@@ -73,13 +82,44 @@ export class RegistrationService implements RegistrationServiceInterface {
       subject: email,
     });
 
-    await this.verificationCodeRepository.create({
+    const verificationCode = await this.verificationCodeRepository.create({
       code_type: VerificationCodeTypeEnum.Registration,
       code_expires_at: expiresAt,
       content,
       token,
     });
 
+    await this.sendVerificationEmail({
+      code: verificationCode.code,
+      token,
+      email,
+    });
+
     return { token };
+  }
+
+  private async sendVerificationEmail({
+    token,
+    email,
+    code,
+  }: {
+    token: string;
+    email: string;
+    code: string;
+  }) {
+    const confirmLink = `${this.envConfig.FRONTEND_CONFIRM_SIGN_UP_URL}/?token=${token}`;
+
+    const template = this.emailTemplateRepository.getTemplate({
+      template: EmailTemplateEnum.SignUp,
+      variables: {
+        [EmailTemplateEnum.SignUp]: { confirmLink, code },
+      },
+    });
+
+    await this.emailAdapter.send({
+      subject: template.subject,
+      html: template.html,
+      to: email,
+    });
   }
 }
