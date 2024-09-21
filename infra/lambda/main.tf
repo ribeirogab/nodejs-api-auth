@@ -2,6 +2,8 @@ provider "aws" {
   region = var.aws_region
 }
 
+data "aws_caller_identity" "current" {}
+
 # DynamoDB Table for storing the authentication resources
 resource "aws_dynamodb_table" "auth_resource_table" {
   name         = "${var.environment}-${var.dynamodb_table_name}"
@@ -36,43 +38,23 @@ resource "aws_dynamodb_table" "auth_resource_table" {
 }
 
 # Environment variable for the authentication JWT secret
-resource "aws_ssm_parameter" "jwt_secret" {
-  name  = "/${var.environment}/authentication-jwt-secret"
-  type  = "SecureString"
-  value = var.jwt_secret
-  tags = {
-    Environment = var.environment
-  }
+data "aws_ssm_parameter" "jwt_secret" {
+  name = "/${var.environment}/authentication-jwt-secret"
 }
 
 # Environment variable for the verification code JWT secret
-resource "aws_ssm_parameter" "verification_code_jwt_secret" {
-  name  = "/${var.environment}/verification-code-jwt-secret"
-  type  = "SecureString"
-  value = var.verification_code_jwt_secret
-  tags = {
-    Environment = var.environment
-  }
+data "aws_ssm_parameter" "verification_code_jwt_secret" {
+  name = "/${var.environment}/verification-code-jwt-secret"
 }
 
 # Environment variable for the Resend API key
-resource "aws_ssm_parameter" "resend_api_key" {
-  name  = "/${var.environment}/resend-api-key"
-  type  = "SecureString"
-  value = var.resend_api_key
-  tags = {
-    Environment = var.environment
-  }
+data "aws_ssm_parameter" "resend_api_key" {
+  name = "/${var.environment}/resend-api-key"
 }
 
 # Environment variable for the default sender email 
-resource "aws_ssm_parameter" "default_sender_email" {
-  name  = "/${var.environment}/default-sender-email"
-  type  = "String"
-  value = var.default_sender_email
-  tags = {
-    Environment = var.environment
-  }
+data "aws_ssm_parameter" "default_sender_email" {
+  name = "/${var.environment}/default-sender-email"
 }
 
 # Lambda Function for Node.js
@@ -91,14 +73,13 @@ resource "aws_lambda_function" "nodejs_api_authentication_lambda" {
     variables = {
       NODE_ENV                     = "production"
       STAGE                        = var.environment
-      JWT_SECRET                   = aws_ssm_parameter.jwt_secret.value
-      VERIFICATION_CODE_JWT_SECRET = aws_ssm_parameter.verification_code_jwt_secret.value
+      JWT_SECRET                   = data.aws_ssm_parameter.jwt_secret.value
+      VERIFICATION_CODE_JWT_SECRET = data.aws_ssm_parameter.verification_code_jwt_secret.value
       FRONTEND_CONFIRM_SIGN_UP_URL = var.frontend_confirm_sign_up_url
       FRONTEND_CONFIRM_SIGN_IN_URL = var.frontend_confirm_sign_in_url
-      AWS_REGION                   = var.aws_region
       AWS_DYNAMO_TABLE_NAME        = aws_dynamodb_table.auth_resource_table.name
-      DEFAULT_SENDER_EMAIL         = aws_ssm_parameter.default_sender_email.value
-      RESEND_API_KEY               = aws_ssm_parameter.resend_api_key.value
+      DEFAULT_SENDER_EMAIL         = data.aws_ssm_parameter.default_sender_email.value
+      RESEND_API_KEY               = data.aws_ssm_parameter.resend_api_key.value
     }
   }
   tags = {
@@ -149,7 +130,20 @@ resource "aws_iam_role" "lambda_exec_role" {
         },
         {
           Action = [
+            "ssm:GetParameter",
             "ssm:GetParameters",
+            "ssm:GetParameterHistory"
+          ]
+          Effect = "Allow"
+          Resource = [
+            "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter/${var.environment}/authentication-jwt-secret",
+            "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter/${var.environment}/verification-code-jwt-secret",
+            "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter/${var.environment}/resend-api-key",
+            "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter/${var.environment}/default-sender-email"
+          ]
+        },
+        {
+          Action = [
             "ec2:DescribeInstances",
             "ec2:CreateNetworkInterface",
             "ec2:AttachNetworkInterface",
