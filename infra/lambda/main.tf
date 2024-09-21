@@ -125,8 +125,11 @@ resource "aws_iam_role" "lambda_exec_role" {
             "dynamodb:Query",
             "dynamodb:Scan"
           ]
-          Effect   = "Allow"
-          Resource = "${aws_dynamodb_table.auth_resource_table.arn}"
+          Effect = "Allow"
+          Resource = [
+            "${aws_dynamodb_table.auth_resource_table.arn}",
+            "${aws_dynamodb_table.auth_resource_table.arn}/index/ReferenceIdIndex"
+          ]
         },
         {
           Action = [
