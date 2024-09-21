@@ -2,62 +2,105 @@ provider "aws" {
   region = var.aws_region
 }
 
+# DynamoDB Table for storing the authentication resources
 resource "aws_dynamodb_table" "auth_resource_table" {
   name         = "${var.environment}-${var.dynamodb_table_name}"
   billing_mode = "PAY_PER_REQUEST"
-
-  hash_key  = "PK"
-  range_key = "SK"
-
+  hash_key     = "PK"
+  range_key    = "SK"
   attribute {
     name = "PK"
     type = "S"
   }
-
   attribute {
     name = "SK"
     type = "S"
   }
-
   attribute {
     name = "ReferenceId"
     type = "S"
   }
-
   ttl {
     attribute_name = "TTL"
     enabled        = true
   }
-
   global_secondary_index {
     name            = "ReferenceIdIndex"
     hash_key        = "PK"
     range_key       = "ReferenceId"
     projection_type = "ALL"
   }
-
   tags = {
     Environment = var.environment
   }
 }
 
-resource "aws_lambda_function" "nodejs_api_authentication_lambda" {
-  function_name = "${var.environment}-${var.project_name}"
-  handler       = "lambda.handler"
-  runtime       = "nodejs20.x"
-  role          = aws_iam_role.lambda_exec_role.arn
+# Environment variable for the authentication JWT secret
+resource "aws_ssm_parameter" "jwt_secret" {
+  name  = "/${var.environment}/authentication-jwt-secret"
+  type  = "SecureString"
+  value = var.jwt_secret
+  tags = {
+    Environment = var.environment
+  }
+}
 
-  # Source code zip file and its hash
+# Environment variable for the verification code JWT secret
+resource "aws_ssm_parameter" "verification_code_jwt_secret" {
+  name  = "/${var.environment}/verification-code-jwt-secret"
+  type  = "SecureString"
+  value = var.verification_code_jwt_secret
+  tags = {
+    Environment = var.environment
+  }
+}
+
+# Environment variable for the Resend API key
+resource "aws_ssm_parameter" "resend_api_key" {
+  name  = "/${var.environment}/resend-api-key"
+  type  = "SecureString"
+  value = var.resend_api_key
+  tags = {
+    Environment = var.environment
+  }
+}
+
+# Environment variable for the default sender email 
+resource "aws_ssm_parameter" "default_sender_email" {
+  name  = "/${var.environment}/default-sender-email"
+  type  = "String"
+  value = var.default_sender_email
+  tags = {
+    Environment = var.environment
+  }
+}
+
+# Lambda Function for Node.js
+resource "aws_lambda_function" "nodejs_api_authentication_lambda" {
+  function_name    = "${var.environment}-${var.project_name}"
+  handler          = "lambda.handler"
+  runtime          = "nodejs20.x"
+  role             = aws_iam_role.lambda_exec_role.arn
   source_code_hash = filebase64sha256("${path.module}/../../dist.zip")
   filename         = "${path.module}/../../dist.zip"
-
-  timeout = 10
-
+  timeout          = 10
   layers = [
     aws_lambda_layer_version.node_modules.arn
   ]
-
-
+  environment {
+    variables = {
+      NODE_ENV                     = "production"
+      STAGE                        = var.environment
+      JWT_SECRET                   = aws_ssm_parameter.jwt_secret.value
+      VERIFICATION_CODE_JWT_SECRET = aws_ssm_parameter.verification_code_jwt_secret.value
+      FRONTEND_CONFIRM_SIGN_UP_URL = var.frontend_confirm_sign_up_url
+      FRONTEND_CONFIRM_SIGN_IN_URL = var.frontend_confirm_sign_in_url
+      AWS_REGION                   = var.aws_region
+      AWS_DYNAMO_TABLE_NAME        = aws_dynamodb_table.auth_resource_table.name
+      DEFAULT_SENDER_EMAIL         = aws_ssm_parameter.default_sender_email.value
+      RESEND_API_KEY               = aws_ssm_parameter.resend_api_key.value
+    }
+  }
   tags = {
     Environment = var.environment
   }
@@ -74,7 +117,6 @@ resource "aws_lambda_layer_version" "node_modules" {
 # IAM Role for Lambda
 resource "aws_iam_role" "lambda_exec_role" {
   name = "${var.environment}-${var.project_name}-iam-role"
-
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -88,7 +130,6 @@ resource "aws_iam_role" "lambda_exec_role" {
       }
     ]
   })
-
   inline_policy {
     name = "${var.environment}-${var.project_name}-policy"
     policy = jsonencode({
@@ -121,16 +162,13 @@ resource "aws_iam_role" "lambda_exec_role" {
       ]
     })
   }
-
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/CloudWatchFullAccess"
   ]
-
   lifecycle {
     create_before_destroy = true
   }
-
   tags = {
     Environment = var.environment
   }
@@ -139,7 +177,6 @@ resource "aws_iam_role" "lambda_exec_role" {
 # API Gateway REST API for Lambda integration
 resource "aws_api_gateway_rest_api" "nodejs_api_authentication_apigateway" {
   name = "${var.environment}-${var.project_name}-apigateway"
-
   tags = {
     Environment = var.environment
   }
@@ -174,7 +211,6 @@ resource "aws_api_gateway_integration" "lambda_integration" {
 resource "aws_api_gateway_deployment" "api_deployment" {
   rest_api_id = aws_api_gateway_rest_api.nodejs_api_authentication_apigateway.id
   stage_name  = var.environment
-
   depends_on = [
     aws_api_gateway_method.any_method,
     aws_api_gateway_integration.lambda_integration
