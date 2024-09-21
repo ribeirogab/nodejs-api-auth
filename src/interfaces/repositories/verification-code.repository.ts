@@ -5,7 +5,7 @@ import type {
 
 export type VerificationCodeRepositoryFilterDto = {
   code_type: VerificationCodeTypeEnum;
-  code: string;
+  token: string;
 };
 
 export type VerificationCodeRepositoryCreateDto = Omit<

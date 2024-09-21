@@ -2,6 +2,7 @@ import { sign, verify } from 'jsonwebtoken';
 import { inject, injectable } from 'tsyringe';
 
 import type { EnvConfig } from './env.config';
+import type { LoggerAdapter } from '@/interfaces';
 
 type SignInDto = {
   /**
@@ -10,20 +11,39 @@ type SignInDto = {
    */
   expiresIn?: string | number;
   subject?: string;
+  secret?: string;
 };
 
 @injectable()
 export class JwtConfig {
-  constructor(@inject('EnvConfig') private readonly envConfig: EnvConfig) {}
+  constructor(
+    @inject('LoggerAdapter') private readonly logger: LoggerAdapter,
 
-  public sign({ expiresIn, subject }: SignInDto) {
-    return sign({}, this.envConfig.JWT_SECRET, {
+    @inject('EnvConfig') private readonly envConfig: EnvConfig,
+  ) {
+    this.logger = this.logger.setPrefix(this.logger, JwtConfig.name);
+  }
+
+  public sign({ expiresIn, subject, secret }: SignInDto) {
+    return sign({}, secret || this.envConfig.JWT_SECRET, {
       expiresIn,
       subject,
     });
   }
 
-  public verify<T>(token: string) {
-    return verify(token, this.envConfig.JWT_SECRET) as T;
+  public verify<T>({
+    token,
+    secret,
+  }: {
+    token: string;
+    secret?: string;
+  }): T | null {
+    try {
+      return verify(token, secret || this.envConfig.JWT_SECRET) as T;
+    } catch (error) {
+      this.logger.error('Error while verifying token', error);
+
+      return null;
+    }
   }
 }

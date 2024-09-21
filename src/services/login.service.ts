@@ -1,61 +1,68 @@
 import { inject, injectable } from 'tsyringe';
 
-import { HttpStatusCodesEnum } from '@/constants';
-import { AppError } from '@/errors';
-import type {
-  AuthHelper,
-  HashAdapter,
-  LoginServiceDto,
-  LoginService as LoginServiceInterface,
-  Session,
-  UserRepository,
+import type { EnvConfig, JwtConfig } from '@/configs';
+import {
+  type LoginServiceDto,
+  type LoginService as LoginServiceInterface,
+  type UserRepository,
+  type VerificationCodeRepository,
+  VerificationCodeTypeEnum,
 } from '@/interfaces';
 
 @injectable()
 export class LoginService implements LoginServiceInterface {
   constructor(
+    @inject('VerificationCodeRepository')
+    private verificationCodeRepository: VerificationCodeRepository,
+
     @inject('UserRepository')
     private readonly userRepository: UserRepository,
 
-    @inject('HashAdapter')
-    private readonly hashAdapter: HashAdapter,
+    @inject('JwtConfig')
+    private readonly jwtConfig: JwtConfig,
 
-    @inject('AuthHelper')
-    private readonly authHelper: AuthHelper,
+    @inject('EnvConfig')
+    private readonly envConfig: EnvConfig,
   ) {}
 
-  public async execute({
-    password,
-    email,
-  }: LoginServiceDto): Promise<Omit<Session, 'user_id'>> {
+  public async execute({ email }: LoginServiceDto): Promise<{ token: string }> {
     const user = await this.userRepository.findByEmail({ email });
 
-    if (!user) {
-      throw new AppError({
-        status_code: HttpStatusCodesEnum.UNAUTHORIZED,
-        message: 'Unauthorized',
-      });
-    }
-
-    const passwordsMatch = this.hashAdapter.compare({
-      decrypted: password,
-      encrypted: user.password,
-      salt: user.password_salt,
+    const token = this.jwtConfig.sign({
+      secret: this.envConfig.JWT_SECRET_VERIFICATION_TOKEN,
+      expiresIn: '10m',
+      subject: email,
     });
 
-    if (!passwordsMatch) {
-      throw new AppError({
-        status_code: HttpStatusCodesEnum.UNAUTHORIZED,
-        message: 'Unauthorized',
+    if (!user) {
+      return { token };
+    }
+
+    const verificationCodeExists =
+      await this.verificationCodeRepository.findOneByContent({
+        code_type: VerificationCodeTypeEnum.Login,
+        content: { key: 'email', value: email },
+      });
+
+    if (verificationCodeExists) {
+      await this.verificationCodeRepository.deleteOne({
+        code_type: VerificationCodeTypeEnum.Login,
+        token: verificationCodeExists.token,
       });
     }
 
-    const session = await this.authHelper.createSession({ user_id: user.id });
+    const expirationTimeInMinutes = 10; // 10 minutes
+    const expiresAt = new Date(
+      Date.now() + expirationTimeInMinutes * 60 * 1000,
+    ).toISOString();
 
-    return {
-      refresh_token: session.refresh_token,
-      access_token: session.access_token,
-      expires_at: session.expires_at,
-    };
+    await this.verificationCodeRepository.create({
+      code_type: VerificationCodeTypeEnum.Login,
+      code_expires_at: expiresAt,
+      content: { email },
+      token,
+    });
+
+    return { token };
   }
 }

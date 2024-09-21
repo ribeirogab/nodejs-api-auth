@@ -9,9 +9,12 @@ export enum HttpMethodEnum {
 }
 
 export enum AppErrorCodeEnum {
-  VerificationCodeNotFound = 'verification_code_not_found',
+  VerificationCodeInvalidOrExpired = 'verification_code_invalid_or_expired',
   RegisterTokenNotFound = 'register_token_not_found',
   EmailAlreadyInUse = 'email_already_in_use',
+  ValidationError = 'validation_error',
+  InvalidLogin = 'invalid_login',
+  Unknown = 'unknown',
 }
 
 export enum NodeEnvEnum {

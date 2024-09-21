@@ -2,7 +2,7 @@ import type { FastifyError, FastifyReply, FastifyRequest } from 'fastify';
 import { inject, injectable } from 'tsyringe';
 import { ZodError } from 'zod';
 
-import { HttpStatusCodesEnum } from '@/constants';
+import { AppErrorCodeEnum, HttpStatusCodesEnum } from '@/constants';
 import { AppError } from '@/errors';
 import type { ErrorMiddleware, LoggerAdapter } from '@/interfaces';
 
@@ -20,6 +20,7 @@ export class ErrorHandlingMiddleware implements ErrorMiddleware {
     if (error instanceof AppError) {
       return reply.status(error.status_code).send({
         status_code: error.status_code,
+        error_code: error.error_code,
         message: error.message,
         details: error.details,
       });
@@ -28,6 +29,7 @@ export class ErrorHandlingMiddleware implements ErrorMiddleware {
     if (error instanceof ZodError) {
       const errorBody = {
         status_code: HttpStatusCodesEnum.BAD_REQUEST,
+        error_code: AppErrorCodeEnum.ValidationError,
         message: 'Payload validation error',
         details: error.issues,
       };
@@ -46,6 +48,7 @@ export class ErrorHandlingMiddleware implements ErrorMiddleware {
       error.statusCode !== HttpStatusCodesEnum.INTERNAL_SERVER_ERROR
     ) {
       const errorBody = {
+        error_code: AppErrorCodeEnum.Unknown,
         status_code: error.statusCode,
         message: error.message,
       };
@@ -59,6 +62,7 @@ export class ErrorHandlingMiddleware implements ErrorMiddleware {
 
     return reply.status(HttpStatusCodesEnum.INTERNAL_SERVER_ERROR).send({
       status_code: HttpStatusCodesEnum.INTERNAL_SERVER_ERROR,
+      error_code: AppErrorCodeEnum.Unknown,
       message: 'Internal server error',
     });
   }

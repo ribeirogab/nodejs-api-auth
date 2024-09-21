@@ -57,9 +57,9 @@ export class RefreshLoginService implements RefreshLoginServiceInterface {
 
   private getUserId({ refreshToken }: { refreshToken: string }): string {
     try {
-      const decodedToken = this.jwtConfig.verify<{ sub?: string }>(
-        refreshToken,
-      );
+      const decodedToken = this.jwtConfig.verify<{ sub?: string }>({
+        token: refreshToken,
+      });
 
       if (!decodedToken?.sub) {
         throw new AppError({

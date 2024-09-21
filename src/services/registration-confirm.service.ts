@@ -1,5 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
+import type { EnvConfig, JwtConfig } from '@/configs';
 import { AppErrorCodeEnum, HttpStatusCodesEnum } from '@/constants';
 import { AppError } from '@/errors';
 import {
@@ -22,18 +23,28 @@ export class RegistrationConfirmService
 
     @inject('VerificationCodeRepository')
     private verificationCodeRepository: VerificationCodeRepository,
+
+    @inject('JwtConfig')
+    private readonly jwtConfig: JwtConfig,
+
+    @inject('EnvConfig')
+    private readonly envConfig: EnvConfig,
   ) {}
 
-  public async execute({ code }: RegistrationConfirmServiceDto): Promise<void> {
-    const verificationCode = await this.verificationCodeRepository.findOne({
-      code_type: VerificationCodeTypeEnum.Registration,
-      code,
-    });
+  public async execute({
+    token,
+    code,
+  }: RegistrationConfirmServiceDto): Promise<void> {
+    this.jwtConfig.verify<{ sub: string }>({ token });
 
-    if (!verificationCode) {
+    const verificationCode = await this.getVerificationToken({ token });
+
+    if (!verificationCode || verificationCode.code !== code) {
       throw new AppError({
-        message: AppErrorCodeEnum.VerificationCodeNotFound,
-        status_code: HttpStatusCodesEnum.NOT_FOUND,
+        error_code: AppErrorCodeEnum.VerificationCodeInvalidOrExpired,
+        status_code: HttpStatusCodesEnum.UNAUTHORIZED,
+        message:
+          'This code has been used or expired. Please go back to get a new code.',
       });
     }
 
@@ -45,12 +56,45 @@ export class RegistrationConfirmService
 
     if (userExists) {
       throw new AppError({
-        message: AppErrorCodeEnum.EmailAlreadyInUse,
+        error_code: AppErrorCodeEnum.EmailAlreadyInUse,
         status_code: HttpStatusCodesEnum.CONFLICT,
+        message: 'This email is already in use.',
       });
     }
 
     await this.userRepository.create(user);
+
+    await this.verificationCodeRepository.deleteOne({
+      code_type: VerificationCodeTypeEnum.Registration,
+      token,
+    });
+  }
+
+  private async getVerificationToken({
+    token,
+  }: {
+    token: string;
+  }): Promise<VerificationCode | null> {
+    const decoded = this.jwtConfig.verify<{ sub: string }>({
+      secret: this.envConfig.JWT_SECRET_VERIFICATION_TOKEN,
+      token,
+    });
+
+    if (!decoded) {
+      throw new AppError({
+        error_code: AppErrorCodeEnum.VerificationCodeInvalidOrExpired,
+        status_code: HttpStatusCodesEnum.UNAUTHORIZED,
+        message:
+          'This code has been used or expired. Please go back to get a new code.',
+      });
+    }
+
+    const verificationCode = await this.verificationCodeRepository.findOne({
+      code_type: VerificationCodeTypeEnum.Registration,
+      token,
+    });
+
+    return verificationCode;
   }
 
   private parseUser(verificationCode: VerificationCode): Omit<User, 'id'> {

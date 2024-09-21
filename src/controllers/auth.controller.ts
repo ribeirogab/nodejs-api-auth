@@ -3,6 +3,8 @@ import { inject, injectable } from 'tsyringe';
 
 import { HttpStatusCodesEnum } from '@/constants';
 import type {
+  LoginConfirmService,
+  LoginConfirmServiceDto,
   LoginService,
   LoginServiceDto,
   LogoutService,
@@ -12,20 +14,31 @@ import type {
 @injectable()
 export class AuthController {
   constructor(
-    @inject('LoginService')
-    private readonly loginService: LoginService,
+    @inject('RefreshLoginService')
+    private readonly refreshLoginService: RefreshLoginService,
+
+    @inject('LoginConfirmService')
+    private readonly loginConfirmService: LoginConfirmService,
 
     @inject('LogoutService')
     private readonly logoutService: LogoutService,
 
-    @inject('RefreshLoginService')
-    private readonly refreshLoginService: RefreshLoginService,
+    @inject('LoginService')
+    private readonly loginService: LoginService,
   ) {}
 
   public async login(request: FastifyRequest, reply: FastifyReply) {
-    const { email, password } = request.body as LoginServiceDto;
+    const { email } = request.body as LoginServiceDto;
 
-    const response = await this.loginService.execute({ email, password });
+    const response = await this.loginService.execute({ email });
+
+    return reply.code(HttpStatusCodesEnum.OK).send(response);
+  }
+
+  public async loginConfirm(request: FastifyRequest, reply: FastifyReply) {
+    const { code, token } = request.body as LoginConfirmServiceDto;
+
+    const response = await this.loginConfirmService.execute({ code, token });
 
     return reply.code(HttpStatusCodesEnum.OK).send(response);
   }

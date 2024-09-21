@@ -1,4 +1,5 @@
 export type RegistrationConfirmServiceDto = {
+  token: string;
   code: string;
 };
 
