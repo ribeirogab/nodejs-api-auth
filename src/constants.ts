@@ -35,10 +35,6 @@ export enum UniqueIdProviderEnum {
   Uuid = 'uuid',
 }
 
-export enum HashProviderEnum {
-  Crypto = 'crypto',
-}
-
 export enum LoggerProviderEnum {
   Winston = 'winston',
 }

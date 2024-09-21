@@ -1,24 +1,36 @@
 export enum EmailTemplateEnum {
-  CompleteRegister = 'complete-register',
-  RecoveryPassword = 'recovery-password',
+  SignIn = 'sign-in',
+  SignUp = 'sign-up',
 }
 
-export type EmailTemplateRepositoryCompleteRegisterVariables = {
-  '{{COMPLETE_REGISTER_URL}}': string;
+export enum EmailTemplateLangEnum {
+  En = 'en',
+  Pt = 'pt',
+}
+
+export type EmailTemplateSignInVariables = {
+  confirmLink: string;
+  username: string;
+  code: string;
 };
 
-export type EmailTemplateRepositoryRecoveryPasswordVariables = {
-  '{{RESET_PASSWORD_URL}}': string;
+export type EmailTemplateSignUpVariables = {
+  confirmLink: string;
+  code: string;
 };
 
 export type EmailTemplateRepositoryGetTemplateDto = {
-  variables:
-    | EmailTemplateRepositoryCompleteRegisterVariables
-    | EmailTemplateRepositoryRecoveryPasswordVariables;
+  lang?: EmailTemplateLangEnum;
   template: EmailTemplateEnum;
-  lang?: string;
+  variables: {
+    [EmailTemplateEnum.SignIn]?: EmailTemplateSignInVariables;
+    [EmailTemplateEnum.SignUp]?: EmailTemplateSignUpVariables;
+  };
 };
 
 export interface EmailTemplateRepository {
-  getTemplate(dto: EmailTemplateRepositoryGetTemplateDto): string;
+  getTemplate(dto: EmailTemplateRepositoryGetTemplateDto): {
+    subject: string;
+    html: string;
+  };
 }

@@ -6,6 +6,7 @@ import { EmailProviderEnum } from '@/constants';
 import {
   EmailAdapter as EmailAdapterInterface,
   EmailAdapterSendDto,
+  type LoggerAdapter,
 } from '@/interfaces';
 
 const providers = {
@@ -19,8 +20,14 @@ export class EmailAdapter implements EmailAdapterInterface {
   constructor(
     @inject('EnvConfig')
     private readonly envConfig: EnvConfig,
+
+    @inject('LoggerAdapter')
+    private readonly logger: LoggerAdapter,
   ) {
-    this.provider = new providers[this.envConfig.EMAIL_PROVIDER]();
+    this.provider = new providers[this.envConfig.EMAIL_PROVIDER](
+      this.envConfig,
+      this.logger,
+    );
   }
 
   public async send(dto: EmailAdapterSendDto): Promise<void> {

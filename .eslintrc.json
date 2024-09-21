@@ -5,7 +5,7 @@
   },
   "overrides": [
     {
-      "files": ["src/container.ts"],
+      "files": ["src/container.ts", "src/configs/env.config.ts"],
       "rules": {
         "prettier/prettier": [
           "error",
