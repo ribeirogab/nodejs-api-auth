@@ -9,10 +9,6 @@ export enum DynamoPartitionKeysEnum {
   User = 'user',
 }
 
-export enum DynamoGSIEnum {
-  ReferenceIdIndex = 'ReferenceIdIndex',
-}
-
 @injectable()
 export class DynamoConfig {
   public readonly client: DynamoDBClient;
