@@ -62,7 +62,7 @@ export class UserAuthProviderRepository
 
       await this.dynamoConfig.client.send(new PutItemCommand(params));
 
-      this.logger.info('Auth provider created:', userAuthProvider);
+      this.logger.debug('Auth provider created:', userAuthProvider);
     } catch (error) {
       this.logger.error('Error creating auth provider:', error);
 
