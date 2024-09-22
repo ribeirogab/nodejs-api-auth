@@ -103,9 +103,6 @@ export class RegistrationConfirmService
         verificationCode,
       );
 
-    // To do: Validate the user data
-    const user = userData as Omit<User, 'id'>;
-
-    return user;
+    return userData as Omit<User, 'id'>;
   }
 }

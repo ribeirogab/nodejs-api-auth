@@ -27,7 +27,8 @@ export class SessionRepository implements SessionRepositoryInterface {
   private readonly PK = 'session';
 
   constructor(
-    @inject('DynamoConfig') private readonly dynamoConfig: DynamoConfig,
+    @inject('DynamoConfig')
+    private readonly dynamoConfig: DynamoConfig,
   ) {}
 
   public async upsert(session: Session): Promise<Session> {
