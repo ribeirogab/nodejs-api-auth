@@ -136,7 +136,7 @@ src/services/
 └── single-sign-on.service.ts          # Manages the SSO (Single Sign-On) processes for different providers.
 ```
 
-## Infra Structure
+## Infra
 
 Infrastructure setup using [Terraform](https://www.terraform.io/) and deployment scripts.
 
@@ -165,3 +165,33 @@ infra/
     ├── deploy-backend.sh         # Shell script for deploying backend infrastructure using Terraform.
     └── deploy-lambda.sh          # Shell script for deploying Lambda functions and their configurations using Terraform.
 ```
+
+## Environment Variables
+
+This project relies on a set of environment variables to configure various aspects of the application. Below is a comprehensive list of these variables, their descriptions, and default values (if any).
+
+| Variable Name                       | Required | Default Value                | Description                                                                 |
+|-------------------------------------|----------|------------------------------|-----------------------------------------------------------------------------|
+| `NODE_ENV`                          | No       | `production`                 | Defines the environment the application is running in (`development`, `production`). |
+| `STAGE`                             | No       | `prod`                       | Indicates the stage of deployment (`dev`, `prod`).                          |
+| `IS_DEBUG`                          | No       | Derived from `NODE_ENV` and `STAGE` | Boolean value indicating if debug mode is enabled.                          |
+| `PORT`                              | No       | `8080`                       | Port on which the application will run.                                     |
+| `CORS_ORIGIN`                       | No       | `*`                          | Specifies the allowed origins for CORS requests.                            |
+| `JWT_SECRET`                        | Yes      | -                            | Secret key used for signing JWT tokens.                                     |
+| `JWT_SECRET_VERIFICATION_TOKEN`     | Yes      | -                            | Secret key used specifically for verification tokens.                       |
+| `APPLICATION_BASE_URL`              | Yes      | -                            | Base URL of the application.                                                |
+| `FRONTEND_CONFIRM_SIGN_UP_URL`      | Yes      | -                            | URL for confirming user sign-up.                                            |
+| `FRONTEND_CONFIRM_SIGN_IN_URL`      | Yes      | -                            | URL for confirming user sign-in.                                            |
+| `RATE_LIMIT_MAX`                    | No       | `60`                         | Maximum number of requests allowed within the time window.                  |
+| `RATE_LIMIT_TIME_WINDOW_MS`         | No       | `60000` (1 minute)           | Time window for rate limiting in milliseconds.                              |
+| `AWS_REGION`                        | No       | `us-east-1`                  | AWS region for DynamoDB and other AWS services.                             |
+| `AWS_DYNAMO_TABLE_NAME`             | Yes      | -                            | Name of the DynamoDB table used by the application.                         |
+| `GOOGLE_CLIENT_SECRET`              | Yes      | -                            | Google OAuth client secret for authentication.                              |
+| `GOOGLE_CLIENT_ID`                  | Yes      | -                            | Google OAuth client ID for authentication.                                  |
+| `GOOGLE_SSO_ENABLED`                | No       | `false`                       | Boolean value indicating if Google SSO is enabled.                          |
+| `EMAIL_PROVIDER`                    | No       | `resend`                     | Specifies the email provider to be used (`Resend`, etc.).                   |
+| `DEFAULT_SENDER_EMAIL`              | Yes      | -                            | Default email address used for sending emails.                              |
+| `RESEND_API_KEY`                    | Required if `EMAIL_PROVIDER` is `resend` | - | API key for Resend email provider.                                          |
+| `UNIQUE_ID_PROVIDER`                | No       | `uuid`                       | Unique ID generation provider (`Uuid`, etc.).                               |
+| `LOGGER_PROVIDER`                   | No       | `winston`                    | Logger provider used for logging (`Winston`, etc.).                         |
+| `LOG_LEVEL`                         | No       | `info` or `debug` (if `IS_DEBUG` is true) | Log level for application logs (`info`, `debug`, etc.).            |
