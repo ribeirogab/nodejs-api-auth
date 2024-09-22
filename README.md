@@ -101,4 +101,30 @@ src/services/
 
 ## Infra Structure
 
-WIP
+Infrastructure setup using [Terraform](https://www.terraform.io/) and deployment scripts.
+
+```bash
+infra/
+├── backend/                      # Infrastructure configuration for backend services
+│   ├── main.tf                   # Main Terraform configuration file for backend resources.
+│   └── outputs.tf                # Specifies the outputs for backend resources, exporting useful information.
+
+├── lambda/                       # Infrastructure configuration for AWS Lambda functions
+│   ├── backend.tf                # Terraform configuration for deploying the Lambda function and its resources.
+│   ├── main.tf                   # Main Terraform configuration file for the Lambda function setup.
+│   ├── outputs.tf                # Specifies the outputs for the Lambda function, exporting useful information.
+│   ├── variables.tf              # Variables used in the Lambda configuration.
+│   ├── env/                      # Environment-specific configurations for Lambda functions
+│   │   ├── dev.s3.tfbackend      # S3 backend configuration for storing the Terraform state file in the dev environment.
+│   │   ├── dev.tfvars            # Variables specific to the dev environment.
+│   │   ├── prod.s3.tfbackend     # S3 backend configuration for storing the Terraform state file in the prod environment.
+│   │   └── prod.tfvars           # Variables specific to the prod environment.
+│   └── layers/                   # Contains configurations for Lambda layers
+│       └── nodejs/               # Node.js Lambda layer dependencies (e.g., npm packages)
+│           ├── package.json      # Node.js package dependencies for the Lambda layer.
+│           └── package-lock.json # Lock file for the Node.js dependencies.
+
+└── scripts/                      # Deployment scripts for automating the infrastructure setup
+    ├── deploy-backend.sh         # Shell script for deploying backend infrastructure using Terraform.
+    └── deploy-lambda.sh          # Shell script for deploying Lambda functions and their configurations using Terraform.
+```
