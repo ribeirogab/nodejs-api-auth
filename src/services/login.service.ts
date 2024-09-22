@@ -7,6 +7,8 @@ import {
   type EmailTemplateRepository,
   type LoginServiceDto,
   type LoginService as LoginServiceInterface,
+  UserAuthProviderEnum,
+  type UserAuthProviderRepository,
   type UserRepository,
   type VerificationCodeRepository,
   VerificationCodeTypeEnum,
@@ -15,6 +17,9 @@ import {
 @injectable()
 export class LoginService implements LoginServiceInterface {
   constructor(
+    @inject('UserAuthProviderRepository')
+    private readonly userAuthProviderRepository: UserAuthProviderRepository,
+
     @inject('EmailTemplateRepository')
     private readonly emailTemplateRepository: EmailTemplateRepository,
 
@@ -35,15 +40,28 @@ export class LoginService implements LoginServiceInterface {
   ) {}
 
   public async execute({ email }: LoginServiceDto): Promise<{ token: string }> {
-    const user = await this.userRepository.findByEmail({ email });
-
     const token = this.jwtConfig.sign({
       secret: this.envConfig.JWT_SECRET_VERIFICATION_TOKEN,
       expiresIn: '10m',
       subject: email,
     });
 
+    const authProvider = await this.userAuthProviderRepository.findOne({
+      provider: UserAuthProviderEnum.Email,
+      provider_id: email,
+    });
+
+    if (!authProvider) {
+      // Return token anyway to avoid brute force attacks to valid emails
+      return { token };
+    }
+
+    const user = await this.userRepository.findOne({
+      id: authProvider.user_id,
+    });
+
     if (!user) {
+      // Return token anyway to avoid brute force attacks to valid emails
       return { token };
     }
 

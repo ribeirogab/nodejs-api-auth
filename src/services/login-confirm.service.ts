@@ -5,9 +5,11 @@ import { AppErrorCodeEnum, HttpStatusCodesEnum } from '@/constants';
 import { AppError } from '@/errors';
 import {
   type AuthHelper,
+  type AuthenticationSession,
   type LoginConfirmServiceDto,
   type LoginConfirmService as LoginConfirmServiceInterface,
-  type Session,
+  UserAuthProviderEnum,
+  type UserAuthProviderRepository,
   type UserRepository,
   type VerificationCodeRepository,
   VerificationCodeTypeEnum,
@@ -16,6 +18,9 @@ import {
 @injectable()
 export class LoginConfirmService implements LoginConfirmServiceInterface {
   constructor(
+    @inject('UserAuthProviderRepository')
+    private readonly userAuthProviderRepository: UserAuthProviderRepository,
+
     @inject('VerificationCodeRepository')
     private verificationCodeRepository: VerificationCodeRepository,
 
@@ -43,7 +48,7 @@ export class LoginConfirmService implements LoginConfirmServiceInterface {
   public async execute({
     token,
     code,
-  }: LoginConfirmServiceDto): Promise<Omit<Session, 'user_id'>> {
+  }: LoginConfirmServiceDto): Promise<AuthenticationSession> {
     const decoded = this.jwtConfig.verify<{ sub: string }>({
       secret: this.envConfig.JWT_SECRET_VERIFICATION_TOKEN,
       token,
@@ -62,13 +67,27 @@ export class LoginConfirmService implements LoginConfirmServiceInterface {
       throw this.genericAuthError;
     }
 
-    const user = await this.userRepository.findByEmail({ email: decoded.sub });
+    const authProvider = await this.userAuthProviderRepository.findOne({
+      provider: UserAuthProviderEnum.Email,
+      provider_id: decoded.sub,
+    });
+
+    if (!authProvider) {
+      throw this.genericAuthError;
+    }
+
+    const user = await this.userRepository.findOne({
+      id: authProvider.user_id,
+    });
 
     if (!user) {
       throw this.genericAuthError;
     }
 
-    const session = await this.authHelper.createSession({ user_id: user.id });
+    const session = await this.authHelper.createSession({
+      provider: UserAuthProviderEnum.Email,
+      user_id: user.id,
+    });
 
     await this.verificationCodeRepository.deleteOne({
       code_type: VerificationCodeTypeEnum.Login,

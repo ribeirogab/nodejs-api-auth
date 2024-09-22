@@ -1,29 +1,24 @@
 import {
+  GetItemCommand,
+  type GetItemInput,
   PutItemCommand,
   type PutItemCommandInput,
-  QueryCommand,
-  type QueryCommandInput,
 } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { inject, injectable } from 'tsyringe';
 import { z } from 'zod';
 
+import { type DynamoConfig, DynamoPartitionKeysEnum } from '@/configs';
 import {
-  type DynamoConfig,
-  DynamoGSIEnum,
-  DynamoPartitionKeysEnum,
-} from '@/configs';
-import type {
-  LoggerAdapter,
-  UniqueIdAdapter,
-  User,
-  UserRepository as UserRepositoryInterface,
+  type LoggerAdapter,
+  type UniqueIdAdapter,
+  type User,
+  type UserRepository as UserRepositoryInterface,
 } from '@/interfaces';
 
 /** DynamoDB structure
  - PK: user
  - SK: id:{id}
- - ReferenceId: [reference_type]:{reference_value}
  - Content: { name, email, id, created_at }
  - TTL: INT
  */
@@ -32,8 +27,8 @@ import type {
 export class UserRepository implements UserRepositoryInterface {
   private readonly PK = DynamoPartitionKeysEnum.User;
   private readonly schema: z.ZodType<Omit<User, 'id'>> = z.object({
+    email: z.string().email().optional(),
     name: z.string().min(2).max(255),
-    email: z.string().email(),
   });
 
   constructor(
@@ -64,7 +59,6 @@ export class UserRepository implements UserRepositoryInterface {
         Item: marshall({
           PK: this.PK,
           SK: `id:${user.id}`,
-          ReferenceId: `email:${user.email}`,
           Content: user,
         }),
       };
@@ -81,33 +75,33 @@ export class UserRepository implements UserRepositoryInterface {
     }
   }
 
-  public async findByEmail(dto: { email: string }): Promise<User | null> {
+  public async findOne({ id }: { id: string }): Promise<User | null> {
     try {
-      const params: QueryCommandInput = {
+      const params: GetItemInput = {
         TableName: this.dynamoConfig.tableName,
-        IndexName: DynamoGSIEnum.ReferenceIdIndex,
-        KeyConditionExpression: 'PK = :pk AND ReferenceId = :reference',
-        ExpressionAttributeValues: marshall({
-          ':pk': this.PK,
-          ':reference': `email:${dto.email}`,
+        Key: marshall({
+          PK: this.PK,
+          SK: `id:${id}`,
         }),
       };
 
-      const { Items } = await this.dynamoConfig.client.send(
-        new QueryCommand(params),
+      const { Item } = await this.dynamoConfig.client.send(
+        new GetItemCommand(params),
       );
 
-      if (!Items || Items.length === 0) {
+      if (!Item) {
         return null;
       }
 
-      const user = unmarshall(Items[0]) as { Content: User };
+      const user = unmarshall(Item) as {
+        Content: User;
+      };
 
-      this.logger.debug('User found by email:', user);
+      this.logger.debug('User data retrieved:', user);
 
       return user.Content;
     } catch (error) {
-      this.logger.error('Error finding user by email:', error);
+      this.logger.error('Error retrieving verification code:', error);
 
       throw error;
     }

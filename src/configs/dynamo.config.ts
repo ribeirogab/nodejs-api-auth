@@ -5,11 +5,8 @@ import type { EnvConfig } from './env.config';
 
 export enum DynamoPartitionKeysEnum {
   VerificationCode = 'verification-code',
+  UserAuthProvider = 'user-auth-provider',
   User = 'user',
-}
-
-export enum DynamoGSIEnum {
-  ReferenceIdIndex = 'ReferenceIdIndex',
 }
 
 @injectable()

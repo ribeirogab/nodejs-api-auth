@@ -15,6 +15,7 @@ export class EnvConfig {
   public readonly CORS_ORIGIN = get('CORS_ORIGIN').default('*').asString();
   public readonly JWT_SECRET = get('JWT_SECRET').required().asString();
   public readonly JWT_SECRET_VERIFICATION_TOKEN = get('JWT_SECRET_VERIFICATION_TOKEN').required().asString();
+  public readonly APPLICATION_BASE_URL = get('APPLICATION_BASE_URL').required().asString();
   public readonly FRONTEND_CONFIRM_SIGN_UP_URL = get('FRONTEND_CONFIRM_SIGN_UP_URL').required().asString();
   public readonly FRONTEND_CONFIRM_SIGN_IN_URL = get('FRONTEND_CONFIRM_SIGN_IN_URL').required().asString();
 
@@ -25,6 +26,10 @@ export class EnvConfig {
 
   public readonly AWS_REGION = get('AWS_REGION').default('us-east-1').asString();
   public readonly AWS_DYNAMO_TABLE_NAME = get('AWS_DYNAMO_TABLE_NAME').required().asString();
+
+  public readonly GOOGLE_CLIENT_SECRET = get('GOOGLE_CLIENT_SECRET').required().asString();
+  public readonly GOOGLE_CLIENT_ID = get('GOOGLE_CLIENT_ID').required().asString();
+  public readonly GOOGLE_SSO_ENABLED = get('GOOGLE_SSO_ENABLED').default('true').asBool();
 
   public readonly EMAIL_PROVIDER = get('EMAIL_PROVIDER')
     .default(EmailProviderEnum.Resend)

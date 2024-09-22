@@ -4,7 +4,7 @@ import type { JwtConfig } from '@/configs';
 import type {
   AuthHelperGenerateSessionDto,
   AuthHelper as AuthHelperInterface,
-  Session,
+  AuthenticationSession,
   SessionRepository,
 } from '@/interfaces';
 
@@ -19,8 +19,9 @@ export class AuthHelper implements AuthHelperInterface {
   ) {}
 
   public async createSession({
+    provider,
     user_id,
-  }: AuthHelperGenerateSessionDto): Promise<Omit<Session, 'user_id'>> {
+  }: AuthHelperGenerateSessionDto): Promise<AuthenticationSession> {
     const accessToken = this.jwtConfig.sign({
       expiresIn: '15m',
       subject: user_id,
@@ -40,6 +41,7 @@ export class AuthHelper implements AuthHelperInterface {
       refresh_token: refreshToken,
       access_token: accessToken,
       expires_at: expiresAt,
+      provider,
       user_id,
     });
 
