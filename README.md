@@ -11,6 +11,43 @@ This project is a boilerplate for an API that handles user creation and authenti
 - **User Logout:** Invalidate JWT tokens and log out users.
 - **Google Authentication:** Log in using Google OAuth2.
 
+## Tools and Technologies
+
+This project utilizes a variety of tools and technologies to handle user authentication, data management, and infrastructure deployment:
+
+### Backend
+
+- **Node.js**: JavaScript runtime environment for building scalable network applications.
+- **TypeScript**: Superset of JavaScript that adds static typing.
+- **Fastify**: Web framework for building fast and low-overhead APIs.
+- **AWS SDK**:
+  - `@aws-sdk/client-dynamodb`: Client for interacting with DynamoDB.
+  - `@aws-sdk/lib-dynamodb`: Helper library for DynamoDB operations.
+  - `@aws-sdk/util-dynamodb`: Utilities for working with DynamoDB data types.
+- **Fastify Plugins**:
+  - `@fastify/aws-lambda`: Integration of Fastify with AWS Lambda.
+  - `@fastify/cors`: CORS support for Fastify applications.
+  - `@fastify/oauth2`: OAuth2 support for Fastify, used for SSO.
+  - `@fastify/rate-limit`: Rate limiting middleware for Fastify.
+- **JWT**:
+  - `jsonwebtoken`: Library for generating and verifying JSON Web Tokens.
+- **Validation**:
+  - `zod`: TypeScript-first schema declaration and validation library.
+  - `zod-to-json-schema`: Converts Zod schemas to JSON Schema format for use with Fastify.
+- **Dependency Injection**:
+  - `tsyringe`: Lightweight dependency injection container for TypeScript/JavaScript.
+- **Utilities**:
+  - `axios`: HTTP client for making API requests.
+  - `env-var`: Library for parsing and validating environment variables.
+  - `uuid`: Library for generating unique identifiers.
+  - `reflect-metadata`: Library used for decorators and metadata reflection.
+- **Logging**:
+  - `winston`: Versatile logging library.
+
+### Infrastructure
+
+- **Terraform**: Infrastructure as Code (IaC) tool used to define and provision infrastructure using a high-level configuration language.
+
 ## Project Structure
 
 The project is organized into several folders within the `src/` directory:
