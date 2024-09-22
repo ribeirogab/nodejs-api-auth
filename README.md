@@ -195,3 +195,21 @@ This project relies on a set of environment variables to configure various aspec
 | `UNIQUE_ID_PROVIDER`                | No       | `uuid`                       | Unique ID generation provider (`Uuid`, etc.).                               |
 | `LOGGER_PROVIDER`                   | No       | `winston`                    | Logger provider used for logging (`Winston`, etc.).                         |
 | `LOG_LEVEL`                         | No       | `info` or `debug` (if `IS_DEBUG` is true) | Log level for application logs (`info`, `debug`, etc.).            |
+
+## Setup and Usage
+
+### Installation
+
+WIP
+
+### Running the Project
+
+WIP
+
+### Testing
+
+WIP
+
+### Deployment
+
+WIP
