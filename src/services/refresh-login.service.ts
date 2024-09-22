@@ -5,10 +5,10 @@ import { HttpStatusCodesEnum } from '@/constants';
 import { AppError } from '@/errors';
 import type {
   AuthHelper,
+  AuthenticationSession,
   LoggerAdapter,
   RefreshLoginServiceDto,
   RefreshLoginService as RefreshLoginServiceInterface,
-  Session,
   SessionRepository,
 } from '@/interfaces';
 
@@ -30,7 +30,7 @@ export class RefreshLoginService implements RefreshLoginServiceInterface {
 
   public async execute({
     refresh_token: refreshToken,
-  }: RefreshLoginServiceDto): Promise<Omit<Session, 'user_id'>> {
+  }: RefreshLoginServiceDto): Promise<AuthenticationSession> {
     const userId = this.getUserId({ refreshToken });
 
     const session = await this.sessionRepository.findByUserId({
@@ -49,6 +49,7 @@ export class RefreshLoginService implements RefreshLoginServiceInterface {
     }
 
     const refreshedSession = await this.authHelper.createSession({
+      provider: session.provider,
       user_id: session.user_id,
     });
 

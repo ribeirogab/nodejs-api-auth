@@ -7,6 +7,8 @@ import {
   type RegistrationConfirmServiceDto,
   type RegistrationConfirmService as RegistrationConfirmServiceInterface,
   type User,
+  UserAuthProviderEnum,
+  type UserAuthProviderRepository,
   type UserRepository,
   type VerificationCode,
   type VerificationCodeRepository,
@@ -18,11 +20,14 @@ export class RegistrationConfirmService
   implements RegistrationConfirmServiceInterface
 {
   constructor(
-    @inject('UserRepository')
-    private readonly userRepository: UserRepository,
+    @inject('UserAuthProviderRepository')
+    private userAuthProviderRepository: UserAuthProviderRepository,
 
     @inject('VerificationCodeRepository')
     private verificationCodeRepository: VerificationCodeRepository,
+
+    @inject('UserRepository')
+    private readonly userRepository: UserRepository,
 
     @inject('JwtConfig')
     private readonly jwtConfig: JwtConfig,
@@ -35,8 +40,6 @@ export class RegistrationConfirmService
     token,
     code,
   }: RegistrationConfirmServiceDto): Promise<void> {
-    this.jwtConfig.verify<{ sub: string }>({ token });
-
     const verificationCode = await this.getVerificationToken({ token });
 
     if (!verificationCode || verificationCode.code !== code) {
@@ -48,13 +51,22 @@ export class RegistrationConfirmService
       });
     }
 
-    const user = this.parseUser(verificationCode);
+    const parsedUser = this.parseUser(verificationCode);
 
-    const userExists = await this.userRepository.findByEmail({
-      email: user.email,
+    if (!parsedUser.email) {
+      throw new AppError({
+        status_code: HttpStatusCodesEnum.INTERNAL_SERVER_ERROR,
+        error_code: AppErrorCodeEnum.Unknown,
+        message: 'Invalid user data',
+      });
+    }
+
+    const authProvider = await this.userAuthProviderRepository.findOne({
+      provider: UserAuthProviderEnum.Email,
+      provider_id: parsedUser.email,
     });
 
-    if (userExists) {
+    if (authProvider) {
       throw new AppError({
         error_code: AppErrorCodeEnum.EmailAlreadyInUse,
         status_code: HttpStatusCodesEnum.CONFLICT,
@@ -62,7 +74,13 @@ export class RegistrationConfirmService
       });
     }
 
-    await this.userRepository.create(user);
+    const user = await this.userRepository.create(parsedUser);
+
+    await this.userAuthProviderRepository.create({
+      provider: UserAuthProviderEnum.Email,
+      provider_id: parsedUser.email,
+      user_id: user.id,
+    });
 
     await this.verificationCodeRepository.deleteOne({
       code_type: VerificationCodeTypeEnum.Registration,
@@ -102,6 +120,14 @@ export class RegistrationConfirmService
       this.verificationCodeRepository.removeReservedFields<Omit<User, 'id'>>(
         verificationCode,
       );
+
+    if (!userData.email) {
+      throw new AppError({
+        status_code: HttpStatusCodesEnum.INTERNAL_SERVER_ERROR,
+        error_code: AppErrorCodeEnum.Unknown,
+        message: 'Invalid user data',
+      });
+    }
 
     return userData as Omit<User, 'id'>;
   }
