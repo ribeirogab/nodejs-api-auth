@@ -1,4 +1,4 @@
-import type { Session } from '../models/session';
+import type { AuthenticationSession } from '../models/session';
 
 export type LoginConfirmServiceDto = {
   token: string;
@@ -6,5 +6,5 @@ export type LoginConfirmServiceDto = {
 };
 
 export interface LoginConfirmService {
-  execute(dto: LoginConfirmServiceDto): Promise<Omit<Session, 'user_id'>>;
+  execute(dto: LoginConfirmServiceDto): Promise<AuthenticationSession>;
 }

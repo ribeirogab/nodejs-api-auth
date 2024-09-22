@@ -4,7 +4,7 @@ import 'reflect-metadata';
 import { container } from 'tsyringe';
 
 import { LoggerAdapter } from './adapters';
-import { EnvConfig, RateLimit } from './configs';
+import { EnvConfig, RateLimit, SSOConfig } from './configs';
 import { HttpMethodEnum } from './constants';
 import './container';
 import { ErrorHandlingMiddleware, RequestAuditMiddleware } from './middlewares';
@@ -15,10 +15,11 @@ export const main = () => {
 
   const errorHandler = container.resolve(ErrorHandlingMiddleware);
   const requestAudit = container.resolve(RequestAuditMiddleware);
+  const logger = container.resolve(LoggerAdapter);
   const rateLimit = container.resolve(RateLimit);
   const envConfig = container.resolve(EnvConfig);
   const appRouter = container.resolve(AppRouter);
-  const logger = container.resolve(LoggerAdapter);
+  const ssoConfig = container.resolve(SSOConfig);
 
   app.setErrorHandler(errorHandler.middleware.bind(errorHandler));
   app.addHook('preHandler', requestAudit.middleware.bind(requestAudit));
@@ -36,6 +37,7 @@ export const main = () => {
   });
 
   app.register(appRouter.routes.bind(appRouter));
+  app.register(ssoConfig.plugin.bind(ssoConfig));
 
   return { app, logger, envConfig };
 };

@@ -10,7 +10,8 @@ import {
   type RegistrationServiceDto,
   type RegistrationService as RegistrationServiceInterface,
   type User,
-  type UserRepository,
+  UserAuthProviderEnum,
+  type UserAuthProviderRepository,
   type VerificationCodeRepository,
   VerificationCodeTypeEnum,
 } from '@/interfaces';
@@ -18,14 +19,14 @@ import {
 @injectable()
 export class RegistrationService implements RegistrationServiceInterface {
   constructor(
+    @inject('UserAuthProviderRepository')
+    private readonly userAuthProviderRepository: UserAuthProviderRepository,
+
     @inject('EmailTemplateRepository')
     private readonly emailTemplateRepository: EmailTemplateRepository,
 
     @inject('VerificationCodeRepository')
     private verificationCodeRepository: VerificationCodeRepository,
-
-    @inject('UserRepository')
-    private readonly userRepository: UserRepository,
 
     @inject('EmailAdapter')
     private readonly emailAdapter: EmailAdapter,
@@ -41,11 +42,12 @@ export class RegistrationService implements RegistrationServiceInterface {
     email,
     name,
   }: RegistrationServiceDto): Promise<{ token: string }> {
-    const userExists = await this.userRepository.findByEmail({
-      email,
+    const userAuth = await this.userAuthProviderRepository.findOne({
+      provider: UserAuthProviderEnum.Email,
+      provider_id: email,
     });
 
-    if (userExists) {
+    if (userAuth) {
       throw new AppError({
         error_code: AppErrorCodeEnum.EmailAlreadyInUse,
         status_code: HttpStatusCodesEnum.CONFLICT,
