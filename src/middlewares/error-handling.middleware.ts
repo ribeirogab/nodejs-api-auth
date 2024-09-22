@@ -1,6 +1,5 @@
 import type { FastifyError, FastifyReply, FastifyRequest } from 'fastify';
 import { inject, injectable } from 'tsyringe';
-import { ZodError } from 'zod';
 
 import { AppErrorCodeEnum, HttpStatusCodesEnum } from '@/constants';
 import { AppError } from '@/errors';
@@ -26,21 +25,16 @@ export class ErrorHandlingMiddleware implements ErrorMiddleware {
       });
     }
 
-    if (error instanceof ZodError) {
+    if (error.code === 'FST_ERR_VALIDATION') {
       const errorBody = {
         status_code: HttpStatusCodesEnum.BAD_REQUEST,
         error_code: AppErrorCodeEnum.ValidationError,
-        message: 'Payload validation error',
-        details: error.issues,
+        message: error.message,
       };
 
       this.logger.error('Payload validation error', errorBody);
 
-      return reply.status(errorBody.status_code).send({
-        status_code: HttpStatusCodesEnum.BAD_REQUEST,
-        message: 'Payload validation error',
-        details: error.issues,
-      });
+      return reply.status(errorBody.status_code).send(errorBody);
     }
 
     if (

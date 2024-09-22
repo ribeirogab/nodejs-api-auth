@@ -3,6 +3,7 @@ import { inject, injectable } from 'tsyringe';
 
 import type { RegistrationController } from '@/controllers';
 import type { Router } from '@/interfaces';
+import { registrationConfirmSchema, registrationSchema } from '@/schemas';
 
 @injectable()
 export class RegistrationRouter implements Router {
@@ -19,6 +20,7 @@ export class RegistrationRouter implements Router {
     app.post(
       '/',
       {
+        schema: registrationSchema,
         config: {
           rateLimit: {
             timeWindow: 1000 * 60, // 1 minute
@@ -33,6 +35,7 @@ export class RegistrationRouter implements Router {
 
     app.post(
       '/confirm',
+      { schema: registrationConfirmSchema },
       this.registrationController.registrationConfirm.bind(
         this.registrationController,
       ),
