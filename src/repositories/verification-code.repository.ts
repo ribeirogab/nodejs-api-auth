@@ -36,9 +36,11 @@ export class VerificationCodeRepository
   private readonly PK = DynamoPartitionKeysEnum.VerificationCode;
 
   constructor(
-    @inject('DynamoConfig') private readonly dynamoConfig: DynamoConfig,
+    @inject('DynamoConfig')
+    private readonly dynamoConfig: DynamoConfig,
 
-    @inject('LoggerAdapter') private readonly logger: LoggerAdapter,
+    @inject('LoggerAdapter')
+    private readonly logger: LoggerAdapter,
   ) {
     this.logger.setPrefix(this.logger, VerificationCodeRepository.name);
   }
